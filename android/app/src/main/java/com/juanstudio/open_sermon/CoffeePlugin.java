@@ -1,4 +1,4 @@
-package app.opensermon.meditation;
+package com.juanstudio.open_sermon;
 
 import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.BillingClientStateListener;

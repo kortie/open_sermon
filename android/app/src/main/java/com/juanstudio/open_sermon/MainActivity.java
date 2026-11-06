@@ -1,4 +1,4 @@
-package app.opensermon.meditation;
+package com.juanstudio.open_sermon;
 
 import android.os.Bundle;
 import android.os.SystemClock;

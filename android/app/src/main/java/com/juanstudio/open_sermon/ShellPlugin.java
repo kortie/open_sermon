@@ -1,4 +1,4 @@
-package app.opensermon.meditation;
+package com.juanstudio.open_sermon;
 
 import com.getcapacitor.JSObject;
 import com.getcapacitor.Plugin;

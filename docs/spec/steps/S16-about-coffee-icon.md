@@ -33,7 +33,7 @@ ios/App/App/Assets.xcassets/AppIcon.appiconset, Splash.imageset
 public/icons/*.png, public/manifest.webmanifest, index.html (시작 화면), src/main.tsx (최소 0.6초)
 LICENSE, NOTICE, scripts/build-notices.mjs, public/licenses/app.txt, third-party.txt
 android/app/build.gradle                              # com.android.billingclient:billing:9.1.0
-android/app/src/main/java/app/opensermon/meditation/CoffeePlugin.java, ShellPlugin.java(S17에서 Launch → Shell), MainActivity.java
+android/app/src/main/java/com/juanstudio/open_sermon/CoffeePlugin.java, ShellPlugin.java(S17에서 Launch → Shell), MainActivity.java
 src/app/platform.ts                                   # coffeeBridgeFor, coffeeFailure, nativeCoffee, APP_VERSION
 src/app/about/About.tsx, src/app/router.ts, src/app/App.tsx, src/ui/Menu.tsx, src/app/app.css
 src/i18n/ko.json, en.json                             # nav.about, about.*

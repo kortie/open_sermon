@@ -4,7 +4,7 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'app.opensermon.meditation',
+  appId: 'com.juanstudio.open_sermon',
   appName: '말씀 묵상',
   webDir: 'dist',
   plugins: {

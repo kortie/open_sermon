@@ -29,7 +29,7 @@
 ```
 android/variables.gradle                  # minSdkVersion 26
 android/app/build.gradle                  # com.google.mlkit:genai-prompt:1.0.0-beta4
-android/app/src/main/java/app/opensermon/meditation/OnDeviceAiPlugin.java, MainActivity.java
+android/app/src/main/java/com/juanstudio/open_sermon/OnDeviceAiPlugin.java, MainActivity.java
 src/app/platform.ts                       # deviceAiBridgeFor, nativeDeviceAi
 src/main.tsx                              # setDeviceAiBridge
 src/core/llm/device.ts, types.ts          # device_busy / device_unavailable / device_too_long
