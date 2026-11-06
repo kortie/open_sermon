@@ -1,0 +1,823 @@
+{
+  "app": {
+    "title": "Scripture Meditation"
+  },
+  "viewer": {
+    "loading": "Loading the Bible text…",
+    "load_failed": "Could not load the Bible text. Open the app once while connected to the internet.",
+    "retry": "Try again",
+    "tab_read": "Read",
+    "tab_search": "Verse search",
+    "prev": "Previous chapter",
+    "next": "Next chapter",
+    "chapter_heading": "{book} {chapter}",
+    "verse_list": "Bible text",
+    "picker_open": "Choose book and chapter",
+    "picker_close": "Close",
+    "picker_books": "Choose a book",
+    "picker_chapters": "{book}: choose a chapter",
+    "picker_back": "Choose another book",
+    "testament_ot": "Old Testament",
+    "testament_nt": "New Testament",
+    "chapter_missing": "This chapter is not in this version. Choose another chapter.",
+    "toolbar": "Reading tools",
+    "bible_choose": "Choose a Bible version",
+    "bible_manage": "Import or manage versions",
+    "bible_imported": "Imported version"
+  },
+  "reference": {
+    "label": "Go to a passage",
+    "placeholder": "e.g. John 3:16, John 15:1-8",
+    "go": "Go",
+    "error": {
+      "EMPTY": "Enter a passage.",
+      "TOO_LONG": "Use 50 characters or fewer.",
+      "BAD_CHARS": "Use only letters, numbers, colon (:), hyphen (-) and comma (,).",
+      "UNKNOWN_BOOK": "Book name not found. e.g. John 3:16",
+      "BAD_FORMAT": "Format not recognized. e.g. John 3:16, John 15:1-8",
+      "REVERSED_RANGE": "The first verse number is larger than the last. e.g. John 15:1-8",
+      "ZERO_OR_NEGATIVE": "Chapters and verses start at 1.",
+      "MULTI_CHAPTER": "Choose verses within one chapter.",
+      "OUT_OF_RANGE": "That chapter or verse is not in this translation."
+    }
+  },
+  "search": {
+    "label": "Words to find",
+    "placeholder": "e.g. love, faith",
+    "submit": "Search",
+    "no_results": "No verses found.",
+    "more": "Show more",
+    "results": "Search results",
+    "error": {
+      "EMPTY": "Enter words to find.",
+      "TOO_LONG": "Use 50 characters or fewer.",
+      "UNKNOWN_BIBLE": "Search is not available for this translation."
+    }
+  },
+  "footer": {
+    "source": "Text: 성경전서 개역한글판 (대한성서공회, Korean Revised Version), King James Version. Data: crizin/bible-db {tag}"
+  },
+  "nav": {
+    "home": "Home",
+    "read": "Read",
+    "settings": "Settings",
+    "sermons": "My Sermons"
+  },
+  "language": {
+    "ko": "한국어",
+    "en": "English"
+  },
+  "bible": {
+    "krv": "Korean Revised Version (개역한글)",
+    "kjv": "King James Version (KJV)"
+  },
+  "home": {
+    "today_title": "Today's passage",
+    "today_open": "Read this chapter",
+    "search_title": "Verse search",
+    "my_sermons_title": "My sermons",
+    "my_sermons_desc": "Keep your sermon manuscripts encrypted on this device and look them up while reading.",
+    "my_sermons_open": "Open My Sermons",
+    "outlines_title": "Message Outline",
+    "outlines_desc": "Long-press to select verses, then tap “Message Outline” to get a frame with the passage and blanks to fill. Saved outlines can be reopened.",
+    "outlines_open": "Saved outlines",
+    "library_title": "Everyday Illustrations · Light Remarks",
+    "library_desc": "Keep the illustrations and remarks you write, grouped by verse.",
+    "library_open": "Open collection"
+  },
+  "settings": {
+    "title": "Settings",
+    "wizard_title": "Setup guide",
+    "wizard_reopen": "Open the setup guide",
+    "language_title": "Screen language",
+    "font_title": "Text size",
+    "font_preview": "Text and buttons will look like this.",
+    "font_option": {
+      "16": "Default",
+      "18": "Large",
+      "20": "Larger",
+      "22": "Largest"
+    },
+    "bible_title": "Default translation",
+    "bible_hint": "Used for reading and verse search.",
+    "source_title": "Text sources",
+    "stats": {
+      "title": "Verse selection history",
+      "hint": "Last 30 days. Stored only on this device and never sent anywhere.",
+      "entry_success": "Long presses that started a selection",
+      "cancel": "Selections cleared without any action",
+      "direct_input": "Verses opened by typing a reference",
+      "percent": "{n}%",
+      "none": "No data yet"
+    },
+    "persona_title": "Persona",
+    "persona_hint": "A persona is a set of choices (tradition, emphasis, tone) that guides the Reflection Draft. Save several and pick one.",
+    "persona_open": "Manage personas",
+    "connection": {
+      "title": "AI connection",
+      "none": "No AI is connected. All basic features work without AI.",
+      "connected": "Connected to {provider}",
+      "key": "Key: {masked}",
+      "model_title": "AI model",
+      "reconnect": "Reconnect",
+      "change_provider": "Change provider",
+      "delete": "Delete key",
+      "delete_confirm": "Delete the key from this device? AI features stop working after that.",
+      "deleted": "The key was deleted.",
+      "connect": "Connect AI",
+      "transfer_notice": "Show the notice before sending",
+      "transfer_notice_note": "Turning it off does not change what is sent. Sermon excerpts are sent only if you agreed."
+    },
+    "bible_imported_group": "My imported versions",
+    "bible_reset_notice": "The chosen version was deleted, so the default version is used.",
+    "device_ai": {
+      "title": "Phone's built-in AI",
+      "hint": "Make everyday examples and light remarks with the AI built into this phone, without a key. The passage and keywords you choose stay on the phone.",
+      "scope_note": "A Reflection Draft is too long for the phone's AI. To make a draft, connect Gemini or Claude.",
+      "connected_note": "When an AI is connected, the connected AI is used first.",
+      "status_checking": "Checking the status.",
+      "status_available": "Ready to use.",
+      "status_downloadable": "The AI model needs to be downloaded first. Connect to Wi-Fi, then tap Download.",
+      "status_downloading": "The AI model is downloading. You can use it as soon as it's done.",
+      "status_unavailable": "The phone's AI is not available on this phone.",
+      "model_note": "AI model: the program the phone uses to write text. The phone maker provides it, and it stays on the phone once downloaded.",
+      "download": "Download",
+      "download_progress": "Downloading ({mb} MB)",
+      "download_failed": "Download failed. Check Wi-Fi and free space, then tap again.",
+      "check_again": "Check again",
+      "state_on": "It is on.",
+      "state_off": "It is off.",
+      "turn_on": "Turn on",
+      "turn_off": "Turn off",
+      "diagnostics": "Google ML Kit may send diagnostic information such as device details, usage counts and text length to Google to improve the feature. Google says the passage and the text it writes are not included.",
+      "diagnostics_link": "Read Google's notice"
+    }
+  },
+  "wizard": {
+    "skip": "Skip",
+    "next": "Next",
+    "back": "Back",
+    "step": "Step {n}",
+    "language": {
+      "title": "Choose the screen language",
+      "hint": "You can change this later in Settings."
+    },
+    "bible": {
+      "title": "Check the Bible translation",
+      "hint": "The default translation for {lang} is {bible}. You can choose another."
+    },
+    "llm": {
+      "title": "Use AI features too?",
+      "hint": "Without AI you can still use all the basics, such as reading and verse search.",
+      "skip": "Skip for now",
+      "skip_desc": "Use only the basic features.",
+      "use": "Use AI features too",
+      "use_desc": "Needs an access key (API key: a password-like string an AI company gives this app)."
+    },
+    "go_home": "Go home",
+    "provider": {
+      "title": "Which AI company will you use?",
+      "hint": "Only companies available now can be chosen. Prices change, so check the company's pricing page.",
+      "recommended": "Recommended for first-time users",
+      "unavailable": "Not available",
+      "reason": {
+        "pending_verification": "Still being checked, not available yet.",
+        "no_browser_access": "This company does not offer direct calls from an app."
+      },
+      "cost": {
+        "anthropic": "Needs a payment method and purchased credits.",
+        "gemini": "You can start for free.",
+        "openai": "Needs a payment method and prepaid credits."
+      },
+      "subscription": {
+        "anthropic": "A Claude subscription (Pro, Max, etc.) is separate from API charges.",
+        "gemini": "Starts with a Google account.",
+        "openai": "A ChatGPT subscription is separate from API charges."
+      },
+      "model_title": "AI model",
+      "model_hint": "The first one is a good start. You can change it later in Settings."
+    },
+    "get_key": {
+      "title": "Create a connection key (API key)",
+      "hint": "Follow these steps. Tap a step when you finish it. Links open in a new window only when you tap them.",
+      "anthropic": {
+        "s1": "Sign up or log in at the Claude Console (platform.claude.com).",
+        "s2": "In Billing, add a payment method and buy credits.",
+        "s3": "In API keys, tap \"Create key\".",
+        "s4": "Give the key an easy name (e.g. \"Bible app\"), choose a long expiration or \"Never\", keep Linked account as yourself, and choose the default workspace. Keys without a workspace do not work in this app.",
+        "s5": "Copy the key. It starts with sk-ant- and is shown only once.",
+        "s6": "Come back to the app and paste it on the next screen.",
+        "note": "A Claude subscription (Pro, Max, etc.) is separate from API charges. Company accounts with settings such as zero data retention (ZDR) cannot be used directly from the app.",
+        "open_console": "Open Claude Console",
+        "open_billing": "Open Billing",
+        "open_keys": "Open API keys"
+      },
+      "gemini": {
+        "s1": "Open Google AI Studio (aistudio.google.com) and sign in with your usual Google account. You type your password only on Google's page.",
+        "s2": "Tap \"Get API key\".",
+        "s3": "Tap \"Create API key\". If asked for a project and this is your first time, choose \"Create API key in new project\". A project is how Google groups your usage.",
+        "s4": "Copy the new key. It starts with AIza.",
+        "s5": "Come back to the app and paste it on the next screen.",
+        "note": "On the free tier, what you send may be used to improve Google services and may be reviewed by people. Do not send sensitive details such as church members' names. With a billing account it is not used for training. Free use has request limits.",
+        "open_console": "Open Google AI Studio"
+      },
+      "common": "Never send your key to anyone or share a screenshot of it. If you think it leaked, delete it on the provider's site, create a new one, and replace it in Settings."
+    },
+    "paste_key": {
+      "title": "Paste the key you created",
+      "hint": "{provider} keys start with {prefix}. Press and hold the box, then choose Paste.",
+      "label": "Connection key (API key)",
+      "repaste": "Paste again",
+      "check_anyway": "Check anyway",
+      "empty": "Please paste your key."
+    },
+    "verify": {
+      "title": "Let's check your key",
+      "hint": "Tapping Check sends one very short request to {provider}.",
+      "pending": "Pasted key: {masked}",
+      "check": "Check",
+      "checking": "Checking…",
+      "success": "Connected.",
+      "saved": "Saved key: {masked}",
+      "repaste": "Paste again",
+      "no_ai": "Use without AI for now"
+    },
+    "consent": {
+      "title": "Send your sermon manuscripts to the AI?",
+      "hint": "The default is \"do not send\". Without sending, saving manuscripts, Search My Sermons and outlines keep working.",
+      "label": "I allow sending my manuscripts to the chosen AI company to analyze my speaking style",
+      "note": "Manuscripts are sent only when you analyze your style, and you will be asked again then.",
+      "free_tier": "With free use, what you send may be used to improve the company's products."
+    },
+    "done": {
+      "title": "You're all set",
+      "hint": "You can now read the Bible and choose verses.",
+      "backup_title": "Make a backup file",
+      "backup_body": "If you change or lose your device, a backup brings your manuscripts back. A forgotten backup password cannot be recovered.",
+      "backup_go": "Make a backup",
+      "start": "Start"
+    }
+  },
+  "selection": {
+    "bar_label": "Selected verses",
+    "count": "Verses selected: {n}",
+    "check_selected": "Selected, verse {verse}",
+    "check_select": "Select verse {verse}",
+    "copy": "Copy",
+    "copied": "Reference and text copied.",
+    "copy_failed": "Could not copy. Please tap again.",
+    "clear_last": "Clear last",
+    "clear_all": "Clear all",
+    "action": {
+      "outline": "Message Outline",
+      "my_sermons": "Search My Sermons",
+      "illustrations": "Everyday Illustrations",
+      "remark": "Light Remark",
+      "draft": "Reflection Draft"
+    }
+  },
+  "sermons": {
+    "title": "My Sermons",
+    "intro": "Manuscripts are read only on this device, personal details are hidden, and the text is stored encrypted. Nothing is sent out.",
+    "add": "Add a manuscript",
+    "empty": "No manuscripts yet.",
+    "count": "{n} manuscripts",
+    "saved_on": "Saved {date}",
+    "saved": "Manuscript saved.",
+    "deleted": "Manuscript deleted.",
+    "delete": "Delete",
+    "delete_confirm": "Delete “{title}”? The text, its saved pieces, any style analysis and its quotes in your Message Outlines will be removed and cannot be restored.",
+    "delete_yes": "Delete",
+    "cancel": "Cancel",
+    "load_failed": "Could not load your manuscripts. Please open this page again.",
+    "add_title": "Add a manuscript",
+    "source_title": "How to add",
+    "source": {
+      "file": "Choose a file",
+      "paste": "Paste text"
+    },
+    "file_pick": "Choose a file",
+    "file_change": "Choose another file",
+    "file_hint": "txt, docx, or a PDF with real text. Up to {mb} MB",
+    "file_chosen": "Selected file: {name}",
+    "paste_title_label": "Title (optional)",
+    "paste_text_label": "Manuscript text",
+    "consent": "I wrote this sermon or have permission to use it.",
+    "consent_note": "The time you agree is recorded on this device.",
+    "next": "Next",
+    "reading": "Reading the manuscript…",
+    "preview_title": "Check before saving",
+    "preview_note": "Check what was hidden automatically. To hide more, long-press to select text, then tap “Hide selection”. You can also edit the text.",
+    "masked_summary": "Hidden automatically: names {name}, churches {church}, contacts {contact}, addresses {address}",
+    "masked_none": "Nothing was hidden automatically. Please check that no names or contact details remain.",
+    "title_label": "Title",
+    "text_label": "Manuscript text",
+    "mask_selection": "Hide selection",
+    "mask_selection_none": "Select the part to hide first.",
+    "save": "Save",
+    "saving": "Saving…",
+    "error": {
+      "CONSENT_REQUIRED": "Please confirm you have the right to use this sermon.",
+      "UNSUPPORTED_TYPE": "Only txt, docx and PDF files can be added.",
+      "TOO_LARGE": "The file is too large. Please keep it under {mb} MB.",
+      "ENCODING": "The text could not be read. Save the file as UTF-8 and try again.",
+      "DOCX_INVALID": "This docx file could not be read. Please check that it is not damaged.",
+      "PDF_INVALID": "This PDF file could not be read. Please check that it is not damaged.",
+      "IMAGE_PDF": "PDFs made of images are not supported yet. Please use a text file or paste the text.",
+      "EMPTY": "The manuscript is empty.",
+      "UNKNOWN": "The manuscript could not be processed. Please try again."
+    },
+    "style": {
+      "title": "Style profile",
+      "intro": "A summary of your tone and structure, made from your uploaded sermons, brings AI drafts closer to how you speak. No sentence from your sermons goes into the summary.",
+      "no_connection": "Connect an AI provider to make one. Go to Settings > AI connection.",
+      "no_consent": "You did not agree to send sermons to the AI provider, so a profile cannot be made. Reconnect in Settings > AI connection to change that.",
+      "no_sermons": "Upload a sermon first.",
+      "none": "Not made yet.",
+      "ready": "Made on {date} from {n} sermons. AI drafts use it.",
+      "stale": "Your sermons changed, so AI drafts no longer use this summary. Make it again.",
+      "limited": "With fewer than 3 sermons, the style will only be reflected in a limited way.",
+      "make": "Make",
+      "remake": "Make again",
+      "delete": "Delete summary",
+      "deleted": "Style profile deleted.",
+      "field": {
+        "avg_sentence_len": "Sentence length: about {n} characters on average",
+        "question_ratio": "Questions: about {n}% of sentences",
+        "illustration_freq": "Use of illustrations: {v}",
+        "structure": "Structure: {v}",
+        "tone": "Tone",
+        "phrases": "Frequent phrases"
+      },
+      "freq": {
+        "low": "low",
+        "mid": "medium",
+        "high": "high"
+      },
+      "structure": {
+        "expository": "expository",
+        "topical": "topical",
+        "narrative": "narrative",
+        "mixed": "mixed"
+      },
+      "confirm_title": "Please check before sending",
+      "confirm_body": "Your sermons will be sent to the AI provider you chose.",
+      "confirm_detail": "{n} masked sermons go to {provider} to analyse your tone. Long sermons are cut after their opening part. The result is kept on this device only.",
+      "gemini_warning": "Note: on Gemini's free tier, what you send may be used to improve Google products. Make sure you are comfortable sending your sermons.",
+      "send": "Send",
+      "cancel": "Cancel",
+      "sending": "Analysing your tone. This can take up to a minute.",
+      "stop": "Cancel request",
+      "cancelled": "Request cancelled. Nothing was saved.",
+      "saved": "Style profile made.",
+      "removed_note": "{n} phrases that matched sentences in your sermons were left out.",
+      "failed": "The summary could not be made, so nothing was saved. Please try again later."
+    }
+  },
+  "common": {
+    "back": "Back",
+    "save": "Save",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "delete": "Delete",
+    "delete_yes": "Delete",
+    "loading": "Loading…",
+    "load_failed": "Could not load. Please open it again.",
+    "save_failed": "Could not save. Please tap again.",
+    "saved_on": "Saved {date}",
+    "bad_ref": "Please select the verses again."
+  },
+  "retrieve": {
+    "title": "Search My Sermons",
+    "intro": "Finds the closest parts of the sermons saved on this device, using the selected verses and words. Results stay on this screen.",
+    "keywords_label": "Words to look for (separate with commas)",
+    "search": "Search again",
+    "searching": "Searching…",
+    "no_sermons": "No sermons yet. Add sermons to search them here.",
+    "go_sermons": "Add sermons",
+    "none": "Nothing related was found. Try other words.",
+    "result_count": "{n} close passages",
+    "from": "From “{title}”",
+    "reason": {
+      "verse": "Same verse",
+      "chapter": "Same chapter",
+      "keyword": "Same words"
+    },
+    "pick": "Add to outline",
+    "picked": "Added to outline",
+    "make_outline": "Make a Message Outline with these",
+    "make_outline_none": "Make a Message Outline"
+  },
+  "outline": {
+    "title": "Message Outline",
+    "list_intro": "Long-press to select verses, then tap “Message Outline” to make a new one.",
+    "list_empty": "No saved outlines yet.",
+    "untitled": "Untitled",
+    "open": "Open",
+    "delete_confirm": "Delete the outline “{title}”? This cannot be undone.",
+    "deleted": "Outline deleted.",
+    "editor_note": "Keep the passage and sermon quotes as they are, and write in the blanks.",
+    "section": {
+      "title": "Title",
+      "intro": "Introduction",
+      "exposition": "Explaining the passage",
+      "application": "Application",
+      "prayer": "Closing prayer"
+    },
+    "quote_bible": "Passage · {ref}",
+    "quote_excerpt": "From my sermon · {title}",
+    "remove_excerpt": "Remove this quote",
+    "blank_label": "Write the {section}",
+    "blank_placeholder": "Write here in your own words.",
+    "save": "Save outline",
+    "saved": "Outline saved.",
+    "copy_warning": "Part of what you wrote matches a quoted sermon for more than 20 characters. Keep it as a quote if you want it word for word, and use your own words in the blanks.",
+    "to_list": "Saved outlines",
+    "not_found": "The outline was not found."
+  },
+  "library": {
+    "title": "Everyday Illustrations · Light Remarks",
+    "intro": "Illustrations and remarks you wrote yourself. Saved only on this device.",
+    "empty": "Nothing here yet.",
+    "empty_howto": "Tap “Add”, choose a kind and write it down. Add a verse (e.g. John 15:5) and tags, and you can find it while reading: select the verse and tap “Everyday Illustrations” or “Light Remark”.",
+    "add": "Add",
+    "kind_label": "Kind",
+    "kind_all": "All",
+    "kind": {
+      "example": "Everyday Illustration",
+      "one_liner": "Light Remark"
+    },
+    "ref_filter": "Related to {ref}",
+    "ref_clear": "Show all verses",
+    "no_match": "Nothing matches.",
+    "tag_search_label": "Find by tag",
+    "match": {
+      "verse": "Same verse",
+      "chapter": "Same chapter"
+    },
+    "body_label": "Text",
+    "ref_label": "Related verse (optional, e.g. John 15:5)",
+    "tags_label": "Tags (optional, separate with commas)",
+    "save": "Save",
+    "saved": "Saved.",
+    "deleted": "Deleted.",
+    "delete_confirm": "Delete this item? This cannot be undone.",
+    "count": "{n} items",
+    "error": {
+      "kind": "Please choose a kind.",
+      "body_empty": "Please write the text.",
+      "body_too_long": "The text can be up to {max} characters.",
+      "tags": "Up to {count} tags, each up to {len} characters.",
+      "ref": "Please write the verse like “John 15:5”."
+    }
+  },
+  "persona": {
+    "title": "Persona",
+    "intro": "A persona is a set of choices used when making a Reflection Draft. Save several and pick one. Do not use people’s names.",
+    "empty": "No personas yet.",
+    "add": "New persona",
+    "in_use": "In use",
+    "use": "Use this",
+    "delete_confirm": "Delete the persona “{name}”?",
+    "saved": "Persona saved.",
+    "deleted": "Persona deleted.",
+    "name_label": "Label (up to 20 characters, e.g. Sunday morning)",
+    "length_fixed": "About 1000 characters (the draft only; added illustrations and remarks not counted)",
+    "field": {
+      "denomination": "Church tradition",
+      "emphasis": "Emphasis (choose one or more)",
+      "style": "Preaching style",
+      "tone": "Tone",
+      "audience": "Audience",
+      "length": "Length"
+    },
+    "denomination": {
+      "presbyterian": "Presbyterian",
+      "methodist": "Methodist",
+      "baptist": "Baptist",
+      "holiness_pentecostal": "Holiness / Pentecostal",
+      "nondenominational_other": "Non-denominational / other"
+    },
+    "emphasis": {
+      "grace": "Grace",
+      "covenant": "Covenant",
+      "practice": "Practice",
+      "mission": "Mission",
+      "holy_spirit": "Holy Spirit",
+      "meditation": "Meditating on Scripture",
+      "community": "Community"
+    },
+    "style": {
+      "expository": "Expository",
+      "topical": "Topical",
+      "narrative": "Narrative"
+    },
+    "tone": {
+      "exhortation": "Encouraging",
+      "explanatory": "Explanatory",
+      "concise_firm": "Brief and firm"
+    },
+    "audience": {
+      "individual": "Individual",
+      "small_group": "Small group",
+      "young_adult": "Young adults",
+      "adult": "Adults"
+    },
+    "length": {
+      "1000": "About 1000 characters"
+    },
+    "summary": "{denomination} · {style} · {tone} · {audience}",
+    "error": {
+      "id": "Please try again.",
+      "name_empty": "Please write a label.",
+      "name_too_long": "The label can be up to 20 characters.",
+      "name_person": "People’s names or phrases like “like Pastor X” cannot be used. Try something like “Sunday morning”.",
+      "denomination": "Please choose a church tradition.",
+      "emphasis": "Please choose at least one emphasis.",
+      "style": "Please choose a preaching style.",
+      "tone": "Please choose a tone.",
+      "audience": "Please choose an audience.",
+      "length": "Please choose a length."
+    }
+  },
+  "backup": {
+    "title": "Backup",
+    "hint": "If you change devices or remove the app, what you saved on this device is lost. Make a backup file and keep it yourself. The app never sends this file anywhere.",
+    "includes": "The backup holds: your sermon manuscripts, personas, library, message outlines, and your language and Bible settings.",
+    "excludes": "API keys and Bibles you imported yourself are left out by default.",
+    "export_title": "Make a backup file",
+    "password_label": "Backup password (8+ characters)",
+    "password_confirm_label": "Backup password again",
+    "password_hint": "Choose a new password just for this backup. The app does not save it.",
+    "lost_notice": "If you forget this password, the backup file cannot be opened, and no one — not even the app's makers — can recover it. Write the password on paper and keep it somewhere safe.",
+    "lost_confirm": "I read this and wrote the password down.",
+    "include_keys": "Also include API keys",
+    "include_keys_note": "You will be asked once more.",
+    "keys_confirm_title": "Put API keys in the backup?",
+    "keys_confirm_text": "With the keys inside, anyone who has both the backup file and its password can use them. Entering the key again on the new device is safer.",
+    "keys_confirm_yes": "Include",
+    "keys_confirm_no": "Leave out",
+    "export_button": "Make backup file",
+    "working": "Locking with your password. This can take a few seconds…",
+    "export_ready": "Your backup file is ready. Tap the button below to save it.",
+    "save_button": "Save file",
+    "save_hint": "Move the saved file yourself, for example by email or to cloud storage.",
+    "import_title": "Restore a backup file",
+    "import_hint": "Pick a backup file made on another device to restore it here.",
+    "file_pick": "Choose backup file",
+    "file_change": "Choose another file",
+    "file_chosen": "Chosen file: {name}",
+    "file_made": "Backup made on {date}.",
+    "import_password_label": "Backup password",
+    "conflict_title": "If this device already has the same item",
+    "conflict": {
+      "skip": "Keep this device's",
+      "overwrite": "Use the backup's"
+    },
+    "import_button": "Restore",
+    "import_working": "Checking the password. This can take a few seconds…",
+    "import_done": "Restored: {sermons} manuscripts, {personas} personas, {library} library items, {outlines} message outlines.",
+    "import_skipped": "Kept because they already exist: {n}",
+    "import_duplicates": "Manuscripts skipped because the same one exists: {n}",
+    "import_profiles": "Your manuscripts changed, so the saved tone analysis was removed.",
+    "unchanged": "Nothing on this device was changed.",
+    "error": {
+      "too_short": "Enter a password of at least 8 characters.",
+      "mismatch": "The two passwords do not match. Enter them again.",
+      "export_failed": "Could not make the backup file. Tap again.",
+      "NOT_BACKUP": "This is not a backup file from this app. Choose a file whose name ends in .osbackup.",
+      "CORRUPTED": "The backup file is damaged and cannot be opened. Choose another backup file.",
+      "WRONG_PASSWORD": "The password is wrong or the file is damaged. Check the password and try again.",
+      "UNSUPPORTED_VERSION": "This backup was made by a newer version of the app or uses an unsupported format. Reload the app and try again.",
+      "import_failed": "Could not restore. Tap again."
+    },
+    "include_bibles": "Include imported versions",
+    "include_bibles_note": "You will be asked once more.",
+    "bibles_confirm_title": "Include imported Bible versions in the backup?",
+    "bibles_confirm_text": "Only text you own or have permission to use should be included. Do not give the backup file to anyone else.",
+    "bibles_confirm_yes": "Include",
+    "bibles_confirm_no": "Leave out",
+    "import_bibles": "Imported versions: {n}"
+  },
+  "llm": {
+    "provider_name": {
+      "gemini": "Gemini (Google)",
+      "openai": "OpenAI",
+      "anthropic": "Anthropic (Claude)",
+      "device": "This phone's AI"
+    },
+    "model_name": {
+      "claude-haiku-5-5": "Claude Haiku 5.5",
+      "claude-sonnet-5-5": "Claude Sonnet 5.5",
+      "claude-opus-5-5": "Claude Opus 5.5",
+      "gemini-flash-latest": "Gemini Flash",
+      "gemini-flash-lite-latest": "Gemini Flash-Lite"
+    },
+    "model_desc": {
+      "claude-haiku-5-5": "Fast and low cost",
+      "claude-sonnet-5-5": "Balanced",
+      "claude-opus-5-5": "Most capable",
+      "gemini-flash-latest": "Balanced, free to start",
+      "gemini-flash-lite-latest": "Faster and lighter"
+    },
+    "error": {
+      "format": "What you pasted does not look like a key. {provider} keys start with {prefix}. Copy it again and paste it here.",
+      "auth": "The key is wrong or was deleted. Create a new key on the provider's site.",
+      "billing": "Billing details or credits are needed. Check the provider's billing page.",
+      "quota": "The usage limit was reached. Try again tomorrow or check your limits on the provider's site.",
+      "region": "This service is not available in your region. Choose another provider.",
+      "network": "Check your internet connection and try again in a moment. Features without AI keep working.",
+      "timeout": "Check your internet connection and try again in a moment. Features without AI keep working.",
+      "workspace": "This key has no workspace. Create the key again and choose the default workspace.",
+      "org_blocked": "This account's settings do not allow use from the app. Create a key with a personal account, or use the app without AI.",
+      "daily_limit": "You have used today's AI requests on this device ({n}). Try again tomorrow.",
+      "unknown": "Could not connect. Please check your key again.",
+      "device_busy": "The phone's AI can't be used right now. Keep the app on screen and try again in a moment.",
+      "device_unavailable": "The phone's AI is not ready. Check its status in Settings.",
+      "device_too_long": "The passage is too long for the phone's AI. Choose fewer verses."
+    },
+    "key_stored_note": "Your API key is stored only on this device, encrypted. The provider bills you directly, and subscriptions (ChatGPT Plus, Claude Pro, etc.) are separate from API charges."
+  },
+  "generate": {
+    "title": "Draft with AI",
+    "notice_title": "Please check before sending",
+    "notice_body": "The selected passage, keywords and persona choices will be sent to {provider}.",
+    "notice_body_excerpts": "The selected passage, keywords, persona choices and the sermon excerpts you agreed to share (up to 3) will be sent to {provider}.",
+    "notice_keep": "Results are saved on this device only.",
+    "notice_settings": "You can turn this notice off in Settings > AI connection.",
+    "keywords_label": "Keywords (comma-separated, 3–5)",
+    "remaining": "AI requests left today: {n}",
+    "send": "Send",
+    "sending": "Making the message draft, everyday examples and light remarks. This can take up to a minute.",
+    "cancel": "Cancel request",
+    "cancelled": "The request was cancelled. You can send again or go back.",
+    "back_to_reading": "Back to the passage",
+    "notice_body_style": "Your style profile summary is sent too. It holds no sentences from your sermons.",
+    "notice_gemini": "Note: on the Gemini free tier, what you send may be used to improve Google services and may be reviewed by people.",
+    "notice_imported": "Even while you read an imported version, the app's built-in {bible} text is sent to the AI. The imported text is not sent.",
+    "no_connection_title": "Connect AI to make a Reflection Draft",
+    "no_connection_body": "Connect your own AI key once to make a Reflection Draft from the verses you chose. Nothing is sent until you connect.",
+    "no_connection_outline_hint": "Without AI, you can start right away with a Message Outline.",
+    "no_connection_connect": "Connect AI",
+    "no_connection_outline": "Use the Message Outline",
+    "device_notice_body": "It is made on this phone from the passage and keywords you chose. Nothing is sent off the phone.",
+    "device_notice_wait": "It may take a little while on some phones. Keep the app on screen while you wait.",
+    "no_connection_device": "The phone's AI can make only short examples and light remarks, without a key. Turn it on in Settings → Phone's built-in AI."
+  },
+  "result": {
+    "ai_notice": "This is an AI-generated draft. Revise it to make it your own.",
+    "sermon": "Message draft",
+    "examples": "Everyday examples",
+    "humor": "Light remarks",
+    "humor_dropped": "The light remarks did not meet the checks, so they are left out this time.",
+    "verse_refs": "Supporting verses",
+    "quote": "Passage quote · {bible}",
+    "purpose": "How to use it: {purpose}",
+    "from_cache": "This result was made earlier with the same choices. No new request was sent."
+  },
+  "fallback": {
+    "title": "Here is material to prepare it yourself",
+    "validation": "The AI result did not pass the checks, so it is not shown.",
+    "outline_hint": "The message outline has the selected passage in its original wording.",
+    "open_outline": "Make a message outline",
+    "library_title": "Found in your library",
+    "library_empty": "No library items for this passage yet.",
+    "open_library": "Open library"
+  },
+  "bible_import": {
+    "manage_title": "Bible versions",
+    "manage_hint": "You can bring a Bible text file you own onto this device and read it here. The file is read and stored on this device only and is never sent anywhere.",
+    "list_title": "My imported versions",
+    "list_empty": "No imported versions yet.",
+    "item_info": "{n} verses · imported {date}",
+    "partial": "Partial",
+    "delete": "Delete",
+    "delete_confirm": "Delete “{name}” from this device? All of its text will be removed.",
+    "delete_yes": "Delete",
+    "delete_no": "Keep it",
+    "deleted": "The version was deleted.",
+    "delete_failed": "Could not delete. Please try again.",
+    "open_import": "Import a .txt Bible",
+    "open_guide": "See Bible version guide",
+    "load_failed": "Could not read the imported versions.",
+    "label": "{name} (my imported version)",
+    "wizard": {
+      "title": "Import a .txt Bible",
+      "step": "Step {n} of 5",
+      "back": "Back",
+      "next": "Next",
+      "cancel": "Stop",
+      "file_title": "Choose the file",
+      "file_hint": "Only .txt files (10 MB or less). Two layouts are accepted.",
+      "format_a": "Layout A: one verse per line — e.g. Genesis 1:1 (text)",
+      "format_b": "Layout B: a chapter line, then verse lines — e.g. Genesis 1, then 1 (text)",
+      "sample": "Get a blank sample",
+      "sample_hint": "A blank form with instructions only. It contains no Bible text.",
+      "file_pick": "Choose file",
+      "file_change": "Choose another file",
+      "file_chosen": "Chosen file: {name}",
+      "info_title": "About this version",
+      "name_label": "Version name",
+      "name_hint": "Shown in the list (up to 40 characters).",
+      "language_label": "Language of the text",
+      "rights_title": "Rights check",
+      "rights_text": "Copyrighted versions may not be copied or shared without the rights holder's permission. The imported text is stored on this device for your own reading and is left out of backups by default.",
+      "rights_check": "I own this text or have permission to use it (including public domain text).",
+      "rights_required": "Check the rights box to continue.",
+      "preview_title": "Check and preview",
+      "checking": "Checking the file…",
+      "encoding": "Text encoding: {encoding}",
+      "encoding_name": {
+        "utf-8": "UTF-8",
+        "euc-kr": "EUC-KR (Korean Windows default)"
+      },
+      "format": "Layout: {format}",
+      "counts": "{books} books, {verses} verses",
+      "partial_note": "Not all 66 books are present, so it is saved as a partial version.",
+      "missing_chapters": "Missing chapters: {n}",
+      "warn_title": "Lines to check",
+      "warn": {
+        "duplicates": "Repeated verses: {n} lines (the first one is used)",
+        "outOfRange": "Chapter or verse number out of range: {n} lines",
+        "unknownBooks": "Unknown book name: {n} lines",
+        "badLines": "Lines that fit neither layout: {n}"
+      },
+      "warn_lines": "Line numbers: {lines}",
+      "ratio": "Share of lines to check: {n}%",
+      "too_many": "More than 20% of the lines need checking, so it cannot be saved. Fix the file and import it again.",
+      "preview_label": "Preview of the beginning",
+      "save": "Save",
+      "saving": "Saving…",
+      "done_title": "Import complete",
+      "done_text": "“{name}” was saved. You can find it under My imported versions in Settings.",
+      "done_read": "Read with this version",
+      "done_back": "Back to settings",
+      "error": {
+        "UNSUPPORTED_TYPE": "Only .txt files can be imported. Save Word or PDF files as .txt in a text editor first.",
+        "TOO_LARGE": "The file is larger than 10 MB. Split it into smaller files.",
+        "ENCODING": "The text in this file cannot be read. Save it again as UTF-8 and choose it again.",
+        "EMPTY": "There are no verses to import. Check that the text uses layout A or B.",
+        "MIXED_FORMAT": "Layouts A and B are mixed. Use one layout and choose the file again.",
+        "UNKNOWN_FORMAT": "The layout is not recognized. Use layout A or B from the sample.",
+        "CONSENT_REQUIRED": "Please check the rights box.",
+        "TOO_MANY_WARNINGS": "More than 20% of the lines need checking, so it cannot be saved.",
+        "BAD_NAME": "Enter a version name of 1 to 40 characters.",
+        "read_failed": "Could not read the file. Please choose it again.",
+        "save_failed": "Could not save. Nothing was stored; please try again."
+      }
+    },
+    "sample": {
+      "l01": "Bible import sample (a blank form; it contains no Bible text)",
+      "l02": "Lines starting with # and empty lines are ignored. You may delete these notes.",
+      "l03": "Use only one layout, A or B. A file mixing both cannot be imported.",
+      "l04": "Layout A: one verse per line. Book chapter:verse text",
+      "l05": "  e.g. Genesis 1:1 (your text here)",
+      "l06": "Layout B: a chapter line, then one line per verse with its number",
+      "l07": "  e.g. Genesis 1",
+      "l08": "  e.g. 1 (your text here)",
+      "l09": "Book names may be full names (Genesis), abbreviations (Gen) or Korean names.",
+      "l10": "Save the file as UTF-8. Include only text you own or may use."
+    }
+  },
+  "bible_guide": {
+    "title": "Bible version guide",
+    "intro": "Each version has its own rights status. Read copyrighted versions on their official sites. An outside page opens only when you tap a button.",
+    "rights": {
+      "public_domain": "Public domain",
+      "copyrighted": "Copyrighted",
+      "unverified": "Not verified"
+    },
+    "verified_on": "Checked {date}",
+    "read": "Read on the official site",
+    "download": "Download .txt",
+    "download_note": "A downloaded file may have a header or a different layout and may not import as is. Change it to layout A or B first.",
+    "no_links": "No verified links.",
+    "name": {
+      "krv": "Korean Revised Version (개역한글)",
+      "nkrv": "New Korean Revised Version (개역개정)",
+      "rnksv": "Revised New Korean Standard Version (새번역)",
+      "kcb": "Korean Common Bible (공동번역)",
+      "kjv": "King James Version (KJV)",
+      "web": "World English Bible (WEB)",
+      "niv": "New International Version (NIV)",
+      "nasb": "New American Standard Bible (NASB)",
+      "nkjv": "New King James Version (NKJV)",
+      "webster": "Webster Bible"
+    },
+    "note": {
+      "krv_no_download": "This version is built into the app. No verified public download source was found, so there is no download link.",
+      "copyrighted_read_only": "Copyrighted: read it on the official site only. Importing a file needs the rights holder's permission.",
+      "us_public_domain": "Public domain in the USA (as stated by Project Gutenberg). The status may differ in other countries.",
+      "web_no_txt": "The text is public domain; the name is a trademark. No official .txt file was confirmed, so there is no download link.",
+      "unverified_no_links": "No official source was confirmed, so no links are given."
+    }
+  },
+  "menu": {
+    "open": "Open menu",
+    "close": "Close"
+  },
+  "bible_short": {
+    "krv": "KRV",
+    "kjv": "KJV"
+  }
+}

@@ -1,0 +1,332 @@
+{
+  "bible_db": {
+    "source": "crizin/bible-db",
+    "release_tag": "v1.0.1",
+    "release_asset": "bible.sqlite.gz",
+    "release_url": "https://github.com/crizin/bible-db/releases/download/v1.0.1/bible.sqlite.gz",
+    "release_sha256": "ecf997698d2d79d2ec36e1e60147375bfb0a206cc622d563410263b5d18e4464",
+    "sources": [
+      "krv",
+      "kjv"
+    ],
+    "file": "public/data/bible.sqlite",
+    "sha256": "20b4a80e96a2711ff6f17b3ebe9a3bd88e2f51e1eceb89bd5bbac904a9b68535"
+  },
+  "i18n": {
+    "default_language": "ko",
+    "supported_languages": [
+      "ko",
+      "en"
+    ],
+    "default_bible": {
+      "ko": "krv",
+      "en": "kjv"
+    },
+    "available_bibles": {
+      "ko": [
+        "krv"
+      ],
+      "en": [
+        "kjv"
+      ]
+    },
+    "excluded_bibles": [
+      "niv"
+    ],
+    "english_length_words": {
+      "sermon_min": 550,
+      "sermon_max": 750
+    }
+  },
+  "ui": {
+    "platform": "mobile_only",
+    "max_width_px": 480,
+    "long_press_ms": 450,
+    "touch_target_min_px": 44,
+    "font_size_px": {
+      "default": 16,
+      "options": [
+        16,
+        18,
+        20,
+        22
+      ]
+    }
+  },
+  "home": {
+    "daily_verses": [
+      "GEN 1:1",
+      "PSA 1:1-2",
+      "PSA 23:1-3",
+      "PSA 46:1",
+      "PSA 119:105",
+      "PSA 121:1-2",
+      "PRO 3:5-6",
+      "ISA 40:31",
+      "ISA 41:10",
+      "JER 29:11",
+      "LAM 3:22-23",
+      "MIC 6:8",
+      "MAT 5:14-16",
+      "MAT 6:33",
+      "MAT 11:28",
+      "MAT 28:19-20",
+      "JHN 1:1",
+      "JHN 3:16",
+      "JHN 14:6",
+      "JHN 15:5",
+      "ROM 8:28",
+      "ROM 12:1-2",
+      "1CO 13:4-7",
+      "2CO 5:17",
+      "GAL 2:20",
+      "EPH 2:8-9",
+      "PHP 4:6-7",
+      "PHP 4:13",
+      "HEB 11:1",
+      "JAS 1:5",
+      "1JN 4:8"
+    ]
+  },
+  "providers": {
+    "gemini": {
+      "endpoint": "https://generativelanguage.googleapis.com/v1beta/models",
+      "model": "gemini-flash-latest",
+      "models": [
+        "gemini-flash-latest",
+        "gemini-flash-lite-latest"
+      ],
+      "browser_direct_verified": true,
+      "auth_header": "x-goog-api-key",
+      "console_url": "https://aistudio.google.com/"
+    },
+    "openai": {
+      "endpoint": "https://api.openai.com/v1/chat/completions",
+      "model": "<모델명, 구현 시 문서 확인>",
+      "browser_direct_verified": false,
+      "unavailable_reason": "no_browser_access"
+    },
+    "anthropic": {
+      "endpoint": "https://api.anthropic.com/v1/messages",
+      "model": "claude-haiku-5-5",
+      "models": [
+        "claude-haiku-5-5",
+        "claude-sonnet-5-5",
+        "claude-opus-5-5"
+      ],
+      "browser_direct_verified": true,
+      "api_version": "2026-10-21",
+      "auth_header": "authorization_bearer",
+      "browser_access_header": "anthropic-dangerous-direct-browser-access",
+      "console_url": "https://platform.claude.com/",
+      "keys_url": "https://platform.claude.com/settings/keys",
+      "billing_url": "https://platform.claude.com/settings/billing",
+      "docs_url": "https://platform.claude.com/docs/en/manage-claude/authentication#browser-based-applications"
+    }
+  },
+  "sermon_ingest": {
+    "max_upload_mb": 5,
+    "min_chunk_chars": 200,
+    "max_chunk_chars": 800,
+    "retrieval_top_k": 3,
+    "min_sermons_for_style": 3,
+    "copy_check_ngram_chars": 20,
+    "image_pdf_min_chars_per_page": 30
+  },
+  "generation": {
+    "sermon_target_chars": 1000,
+    "sermon_min_chars": 800,
+    "sermon_max_chars": 1200,
+    "timeout_seconds": 60,
+    "max_retries_validation": 1,
+    "max_output_tokens": 4096,
+    "style_profile_max_input_chars": 40000,
+    "style_profile_max_output_tokens": 1024,
+    "humor_forbidden_topics": {
+      "ko": {
+        "group_disparagement": [
+          "사이비",
+          "미개",
+          "장로교는",
+          "감리교는",
+          "침례교는",
+          "오순절은",
+          "가톨릭은",
+          "개신교는",
+          "불신자들은",
+          "외국인들은",
+          "여자들은",
+          "남자들은",
+          "노인들은",
+          "시골 사람"
+        ],
+        "clergy_mockery": [
+          "먹사",
+          "목사들은",
+          "목사 흉",
+          "목사 놀림",
+          "헌금 타령",
+          "설교가 지루",
+          "졸린 설교",
+          "설교 시간에 졸"
+        ],
+        "suffering_mockery": [
+          "죽음",
+          "죽은 사람",
+          "사망",
+          "장례",
+          "자살",
+          "암 환자",
+          "암에 걸",
+          "장애인",
+          "병신",
+          "치매",
+          "불치병"
+        ],
+        "sexual": [
+          "섹스",
+          "성관계",
+          "야한",
+          "19금",
+          "음란",
+          "불륜",
+          "속옷",
+          "알몸"
+        ],
+        "political": [
+          "대통령",
+          "여당",
+          "야당",
+          "민주당",
+          "국민의힘",
+          "좌파",
+          "우파",
+          "빨갱이",
+          "수꼴",
+          "선거"
+        ]
+      },
+      "en": {
+        "group_disparagement": [
+          "heathens",
+          "catholics are",
+          "baptists are",
+          "methodists are",
+          "presbyterians are",
+          "pentecostals are",
+          "atheists are",
+          "unbelievers are",
+          "foreigners are",
+          "women are",
+          "men are",
+          "old people are",
+          "rednecks"
+        ],
+        "clergy_mockery": [
+          "pastors are",
+          "preachers are",
+          "greedy pastor",
+          "boring sermon",
+          "sermon put",
+          "asleep during the sermon",
+          "televangelist"
+        ],
+        "suffering_mockery": [
+          "death",
+          "dying",
+          "died",
+          "funeral",
+          "suicide",
+          "cancer",
+          "disabled",
+          "retarded",
+          "dementia",
+          "terminal illness"
+        ],
+        "sexual": [
+          "sex",
+          "sexy",
+          "naked",
+          "nude",
+          "affair",
+          "underwear",
+          "x-rated",
+          "lingerie"
+        ],
+        "political": [
+          "president",
+          "democrat",
+          "democrats",
+          "republican",
+          "republicans",
+          "left-wing",
+          "right-wing",
+          "liberals",
+          "conservatives",
+          "election"
+        ]
+      }
+    }
+  },
+  "local_limits": {
+    "daily_llm_calls_per_device": 30
+  },
+  "bible_import": {
+    "accepted_extensions": [
+      "txt"
+    ],
+    "max_file_mb": 10,
+    "encodings_tried": [
+      "utf-8",
+      "euc-kr"
+    ],
+    "max_warning_ratio": 0.2,
+    "require_rights_consent": true,
+    "include_in_backup_default": false
+  },
+  "wizard": {
+    "steps": [
+      "language",
+      "bible",
+      "llm_choice",
+      "provider",
+      "get_key",
+      "paste_key",
+      "verify",
+      "consent",
+      "done"
+    ],
+    "skippable": true,
+    "providers_order": [
+      "gemini",
+      "openai",
+      "anthropic"
+    ],
+    "beginner_recommendation": "gemini",
+    "key_format_hints": {
+      "gemini": "AIza",
+      "openai": "sk-",
+      "anthropic": "sk-ant-"
+    }
+  },
+  "backup": {
+    "pbkdf2_iterations": 600000
+  },
+  "on_device_ai": {
+    "kinds": [
+      "example",
+      "one_liner"
+    ],
+    "models": {
+      "android": "gemini-nano",
+      "ios": "apple-foundation"
+    },
+    "max_output_tokens": 512,
+    "max_passage_chars": {
+      "ko": 1200,
+      "en": 2400
+    },
+    "timeout_seconds": 60,
+    "diagnostics_disclosure_url": "https://developers.google.com/ml-kit/android-data-disclosure"
+  }
+}

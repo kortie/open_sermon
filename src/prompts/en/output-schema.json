@@ -1,0 +1,11 @@
+{
+  "sermon": { "title": "", "body": "", "verse_refs": [] },
+  "examples": [
+    { "text": "", "verse_refs": [] },
+    { "text": "", "verse_refs": [] }
+  ],
+  "humor": [
+    { "text": "", "purpose": "" },
+    { "text": "", "purpose": "" }
+  ]
+}

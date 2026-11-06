@@ -1,0 +1,102 @@
+[
+  {
+    "id": "krv",
+    "name": "개역한글",
+    "language": "ko",
+    "rights": "public_domain",
+    "read_url": "https://www.bskorea.or.kr/bible/korbibReadpage.php",
+    "download_url": "",
+    "verified_on": "2026-11-05",
+    "note": "krv_no_download"
+  },
+  {
+    "id": "nkrv",
+    "name": "개역개정",
+    "language": "ko",
+    "rights": "copyrighted",
+    "read_url": "https://www.bskorea.or.kr/bible/korbibReadpage.php",
+    "download_url": "",
+    "verified_on": "2026-11-05",
+    "note": "copyrighted_read_only"
+  },
+  {
+    "id": "rnksv",
+    "name": "새번역 (표준새번역)",
+    "language": "ko",
+    "rights": "copyrighted",
+    "read_url": "https://www.bskorea.or.kr/bible/korbibReadpage.php",
+    "download_url": "",
+    "verified_on": "2026-11-05",
+    "note": "copyrighted_read_only"
+  },
+  {
+    "id": "kcb",
+    "name": "공동번역",
+    "language": "ko",
+    "rights": "copyrighted",
+    "read_url": "https://www.bskorea.or.kr/bible/korbibReadpage.php",
+    "download_url": "",
+    "verified_on": "2026-11-05",
+    "note": "copyrighted_read_only"
+  },
+  {
+    "id": "kjv",
+    "name": "King James Version",
+    "language": "en",
+    "rights": "public_domain",
+    "read_url": "https://www.gutenberg.org/ebooks/10",
+    "download_url": "https://www.gutenberg.org/ebooks/10.txt.utf-8",
+    "verified_on": "2026-11-05",
+    "note": "us_public_domain"
+  },
+  {
+    "id": "web",
+    "name": "World English Bible",
+    "language": "en",
+    "rights": "public_domain",
+    "read_url": "https://worldenglish.bible/",
+    "download_url": "",
+    "verified_on": "2026-11-05",
+    "note": "web_no_txt"
+  },
+  {
+    "id": "niv",
+    "name": "New International Version",
+    "language": "en",
+    "rights": "copyrighted",
+    "read_url": "https://www.biblegateway.com/versions/New-International-Version-NIV-Bible/",
+    "download_url": "",
+    "verified_on": "2026-11-05",
+    "note": "copyrighted_read_only"
+  },
+  {
+    "id": "nasb",
+    "name": "New American Standard Bible",
+    "language": "en",
+    "rights": "copyrighted",
+    "read_url": "https://www.biblegateway.com/",
+    "download_url": "",
+    "verified_on": "2026-11-05",
+    "note": "copyrighted_read_only"
+  },
+  {
+    "id": "nkjv",
+    "name": "New King James Version",
+    "language": "en",
+    "rights": "copyrighted",
+    "read_url": "https://www.biblegateway.com/",
+    "download_url": "",
+    "verified_on": "2026-11-05",
+    "note": "copyrighted_read_only"
+  },
+  {
+    "id": "webster",
+    "name": "Webster Bible",
+    "language": "en",
+    "rights": "unverified",
+    "read_url": "",
+    "download_url": "",
+    "verified_on": "",
+    "note": "unverified_no_links"
+  }
+]

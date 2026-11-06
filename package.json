@@ -1,0 +1,57 @@
+{
+  "name": "open-sermon",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit -p tsconfig.json && vite build",
+    "build:app": "tsc --noEmit -p tsconfig.json && vite build --mode app && node scripts/check-app-build.mjs && cap sync",
+    "android:debug": "npm run build:app && cd android && ./gradlew assembleDebug",
+    "preview": "vite preview --port 4173 --strictPort",
+    "lint": "eslint . && node scripts/check-i18n.mjs",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:e2e": "playwright test tests/e2e",
+    "test:network": "playwright test tests/network",
+    "verify:db": "node scripts/verify-db.mjs",
+    "db:build": "node scripts/build-bible-db.mjs"
+  },
+  "dependencies": {
+    "@capacitor/android": "8.5.3",
+    "@capacitor/core": "8.5.3",
+    "@capacitor/filesystem": "8.1.5",
+    "@capacitor/ios": "8.5.3",
+    "@capacitor/share": "8.0.3",
+    "fflate": "0.8.3",
+    "pdfjs-dist": "6.4.299",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "sql.js": "1.15.2"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "8.5.3",
+    "@eslint/js": "10.0.1",
+    "@playwright/test": "1.64.1",
+    "@types/node": "22.20.5",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "@types/sql.js": "1.4.11",
+    "@vitejs/plugin-react": "6.2.1",
+    "@vitest/coverage-v8": "5.1.0",
+    "ajv": "8.20.0",
+    "eslint": "10.14.0",
+    "eslint-plugin-react-hooks": "7.1.1",
+    "fake-indexeddb": "6.2.7",
+    "globals": "17.14.0",
+    "jsdom": "30.1.3",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.72.1",
+    "vite": "8.3.5",
+    "vite-plugin-pwa": "2.0.0",
+    "vitest": "5.1.0"
+  }
+}

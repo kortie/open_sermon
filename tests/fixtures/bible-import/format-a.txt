@@ -1,0 +1,8 @@
+# 합성 시험 파일: 실제 성경 본문이 아닙니다.
+창세기 1:1 시험 문장 첫째 줄입니다 가나다
+창세기 1:2 시험 문장 둘째 줄입니다 라마바
+
+창 1:3 약어로 쓴 셋째 줄입니다 사아자
+요한복음 3:16 요한 책 시험 줄입니다 차카타
+Genesis 2:1 English name line for testing
+1 Samuel 3:4 numbered book name line

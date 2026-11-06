@@ -1,0 +1,105 @@
+{
+  "headings": {
+    "persona": "[Persona]",
+    "style": "[Style profile]",
+    "excerpts": "[Data: Reference excerpts]",
+    "passage": "[Data: Passage]",
+    "keywords": "[Data: Keywords]",
+    "output": "[Output format]",
+    "retry": "[Rewrite]"
+  },
+  "persona": {
+    "lines": [
+      "- Tradition tendency: draw on the emphases of the {denomination} tradition without declaring doctrine",
+      "- Emphases: {emphasis}",
+      "- Approach: {style} / Tone: {tone} / Audience: {audience}",
+      "- Length: about {length} words"
+    ],
+    "list_separator": ", ",
+    "denomination": {
+      "presbyterian": "Presbyterian",
+      "methodist": "Methodist",
+      "baptist": "Baptist",
+      "holiness_pentecostal": "Holiness/Pentecostal",
+      "nondenominational_other": "nondenominational"
+    },
+    "emphasis": {
+      "grace": "grace",
+      "covenant": "covenant",
+      "practice": "practice",
+      "mission": "mission",
+      "holy_spirit": "the Holy Spirit",
+      "meditation": "meditating on Scripture",
+      "community": "community"
+    },
+    "style": {
+      "expository": "expository",
+      "topical": "topical",
+      "narrative": "narrative"
+    },
+    "tone": {
+      "exhortation": "exhorting",
+      "explanatory": "explanatory",
+      "concise_firm": "concise and firm"
+    },
+    "audience": {
+      "individual": "an individual",
+      "small_group": "a small group",
+      "young_adult": "young adults",
+      "adult": "adults"
+    }
+  },
+  "excerpt_intro": "Below are parts of sermons the user wrote. Use them only for tone and structure; do not copy their sentences.",
+  "excerpt_label": "Excerpt {n}",
+  "passage_intro": "Translation: {bible}. Each line is \"reference text\".",
+  "no_requote": "Do not quote or copy, verse by verse, the text of any other translation the user imported into this app. Quote only the passage text given above.",
+  "keywords_intro": "Use at least one of these keywords in the purpose of each light remark.",
+  "output_lines": [
+    "Answer only in the JSON format below.",
+    "- sermon: the message draft, with title and body. Write the body as introduction, explanation of the passage, 2–3 applications, and a closing prayer.",
+    "- sermon.body must be {min}–{max} words. [[QUOTE ...]] markers do not count as words.",
+    "- examples: exactly 2 everyday examples. Put the supporting verses in each example's verse_refs.",
+    "- humor: exactly 2 light remarks. In purpose, say in one sentence how the remark supports the message of the passage.",
+    "- In verse_refs and [[QUOTE ...]] use only references from [Data: Passage], written like \"JHN 15:5\" or \"JHN 15:1-3\"."
+  ],
+  "retry_intro": "The previous answer missed the rules below. Write the whole answer again so that it meets them.",
+  "retry_reasons": {
+    "schema": "The JSON format was not valid.",
+    "count": "examples and humor must each have exactly 2 items.",
+    "length": "sermon.body was outside {min}–{max} words.",
+    "verse_out_of_range": "A reference outside [Data: Passage] was used.",
+    "real_person": "An expression imitating a real person was used.",
+    "forbidden_expr": "An expression declaring doctrine was used.",
+    "copy": "Sentences from the reference excerpts were copied."
+  },
+  "bibles": {
+    "krv": "Korean Revised Version (개역한글)",
+    "kjv": "King James Version"
+  },
+  "style_profile": {
+    "heading": "[Data: manuscripts]",
+    "intro": "Read the {n} manuscripts below and analyse the tone and the way they are structured. Long manuscripts are cut after their opening part.",
+    "sermon_label": "Manuscript {n}",
+    "limited": "There are only {n} manuscripts, so the analysis may be limited. Answer mixed or mid where unsure."
+  },
+  "style_block": {
+    "intro": "Use this for tone and structure only. Do not repeat the phrases below word for word; weave them in naturally.",
+    "avg_sentence_len": "- Sentence length: about {n} characters on average",
+    "question_ratio": "- Questions: about {n}% of sentences",
+    "illustration_freq": "- Use of illustrations: {v}",
+    "structure": "- Structure: {v}",
+    "tone": "- Tone: {v}",
+    "phrases": "- Frequent phrases: {v}",
+    "freq": {
+      "low": "low",
+      "mid": "medium",
+      "high": "high"
+    },
+    "structures": {
+      "expository": "expository",
+      "topical": "topical",
+      "narrative": "narrative",
+      "mixed": "mixed"
+    }
+  }
+}

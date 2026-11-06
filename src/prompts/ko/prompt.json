@@ -1,0 +1,105 @@
+{
+  "headings": {
+    "persona": "[페르소나]",
+    "style": "[스타일 프로필]",
+    "excerpts": "[데이터: 참고 발췌]",
+    "passage": "[데이터: 본문]",
+    "keywords": "[데이터: 키워드]",
+    "output": "[출력 형식]",
+    "retry": "[다시 쓰기]"
+  },
+  "persona": {
+    "lines": [
+      "- 전통 경향: {denomination} 전통의 강조점을 참고하되 교리를 단정하지 않는다",
+      "- 강조점: {emphasis}",
+      "- 설교 방식: {style} / 말투: {tone} / 대상: {audience}",
+      "- 분량: 약 {length}자"
+    ],
+    "list_separator": ", ",
+    "denomination": {
+      "presbyterian": "장로교",
+      "methodist": "감리교",
+      "baptist": "침례교",
+      "holiness_pentecostal": "성결·오순절",
+      "nondenominational_other": "초교파"
+    },
+    "emphasis": {
+      "grace": "은혜",
+      "covenant": "언약",
+      "practice": "실천",
+      "mission": "선교",
+      "holy_spirit": "성령",
+      "meditation": "말씀 묵상",
+      "community": "공동체"
+    },
+    "style": {
+      "expository": "강해식",
+      "topical": "주제식",
+      "narrative": "이야기식"
+    },
+    "tone": {
+      "exhortation": "권면형",
+      "explanatory": "설명형",
+      "concise_firm": "간결하고 단호한 말투"
+    },
+    "audience": {
+      "individual": "개인",
+      "small_group": "소그룹",
+      "young_adult": "청년",
+      "adult": "장년"
+    }
+  },
+  "excerpt_intro": "아래는 사용자가 쓴 설교의 일부입니다. 말투와 구성만 참고하고 문장을 옮기지 마십시오.",
+  "excerpt_label": "발췌 {n}",
+  "passage_intro": "역본: {bible}. 각 줄은 \"참조 원문\" 형식입니다.",
+  "no_requote": "사용자가 이 앱에서 따로 가져온 다른 역본의 본문을 절 단위로 인용하거나 옮겨 적지 마세요. 본문 인용은 위에 준 원문만 쓰세요.",
+  "keywords_intro": "다음 키워드 중 하나 이상을 가벼운 한마디의 purpose에 넣으십시오.",
+  "output_lines": [
+    "아래 JSON 형식으로만 답하십시오.",
+    "- sermon: 말씀 나눔 초안. title(제목)과 body(본문). body는 도입, 본문 해설, 적용 2~3가지, 맺음 기도 순서로 씁니다.",
+    "- sermon.body는 공백을 포함해 {min}~{max}자로 씁니다. [[QUOTE ...]] 표시는 글자 수에 넣지 않습니다.",
+    "- examples: 삶에 닿는 예시 정확히 2개. 각 예시의 verse_refs에 근거 절을 적습니다.",
+    "- humor: 가벼운 한마디 정확히 2개. purpose에는 이 한마디가 본문 메시지를 어떻게 살리는지 한 문장으로 적습니다.",
+    "- verse_refs와 [[QUOTE ...]]에는 [데이터: 본문]에 있는 참조만 \"JHN 15:5\" 또는 \"JHN 15:1-3\" 형식으로 씁니다."
+  ],
+  "retry_intro": "이전 답이 다음 기준을 지키지 않았습니다. 기준에 맞게 처음부터 다시 쓰십시오.",
+  "retry_reasons": {
+    "schema": "JSON 형식이 맞지 않았습니다.",
+    "count": "examples와 humor는 각각 정확히 2개여야 합니다.",
+    "length": "sermon.body 길이가 {min}~{max}자 범위를 벗어났습니다.",
+    "verse_out_of_range": "[데이터: 본문]에 없는 참조를 썼습니다.",
+    "real_person": "실존 인물을 흉내 내는 표현을 썼습니다.",
+    "forbidden_expr": "교리를 단정하는 표현을 썼습니다.",
+    "copy": "참고 발췌의 문장을 그대로 옮겼습니다."
+  },
+  "bibles": {
+    "krv": "개역한글",
+    "kjv": "King James Version (KJV)"
+  },
+  "style_profile": {
+    "heading": "[데이터: 원고]",
+    "intro": "아래 원고 {n}편을 읽고 말투와 구성 방식을 분석해 주세요. 긴 원고는 앞부분만 들어 있습니다.",
+    "sermon_label": "원고 {n}",
+    "limited": "원고가 {n}편뿐이라 분석이 제한적일 수 있습니다. 확실하지 않은 항목은 mixed나 mid로 답해 주세요."
+  },
+  "style_block": {
+    "intro": "말투와 구성만 참고합니다. 아래 표현을 그대로 반복하지 말고 자연스럽게 섞어 쓰세요.",
+    "avg_sentence_len": "- 문장 길이: 평균 약 {n}자",
+    "question_ratio": "- 질문형 문장: 약 {n}%",
+    "illustration_freq": "- 예화 빈도: {v}",
+    "structure": "- 구성 방식: {v}",
+    "tone": "- 말투: {v}",
+    "phrases": "- 자주 쓰는 표현: {v}",
+    "freq": {
+      "low": "낮음",
+      "mid": "보통",
+      "high": "높음"
+    },
+    "structures": {
+      "expository": "강해식",
+      "topical": "주제식",
+      "narrative": "이야기식",
+      "mixed": "혼합"
+    }
+  }
+}
