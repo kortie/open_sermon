@@ -1,19 +1,17 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { checkBibleSources, checkConfig, doneSteps, verifiedProviderOrigins } from '../../../scripts/check-config.mjs';
+import { checkBibleSources, checkConfig, verifiedProviderOrigins } from '../../../scripts/check-config.mjs';
 
 const schema = JSON.parse(readFileSync('config/app.config.schema.json', 'utf8'));
 const base = () => JSON.parse(readFileSync('config/app.config.json', 'utf8'));
-const providersDoc = readFileSync('docs/PROVIDERS.md', 'utf8');
 const run = (cfg: object, opts: Record<string, unknown> = {}) =>
-  checkConfig(cfg, { schema, providersDoc, ...opts }) as { errors: string[]; warnings: string[] };
+  checkConfig(cfg, { schema, ...opts }) as { errors: string[]; warnings: string[] };
 
 describe('check-config', () => {
-  it('passes the repository config (placeholders are warnings before their step)', () => {
+  it('passes the repository config with no warnings', () => {
     const { errors, warnings } = run(base());
     expect(errors).toEqual([]);
-    expect(warnings).not.toContainEqual(expect.stringContaining('bible_db.sha256'));
-    expect(warnings).not.toContainEqual(expect.stringContaining('backup.pbkdf2_iterations'));
+    expect(warnings).toEqual([]);
   });
 
   it('backup.pbkdf2_iterations must equal the confirmed S06 value', () => {
@@ -47,16 +45,15 @@ describe('check-config', () => {
   it('fails when a verified provider still has placeholders', () => {
     const cfg = base();
     cfg.providers.gemini = { endpoint: '<엔드포인트>', model: '<모델>', browser_direct_verified: true };
-    const { errors } = run(cfg, { providersDoc: '# Providers\n\n## anthropic\n- 확인 날짜: 2026-11-05\n' });
+    const { errors } = run(cfg);
     expect(errors).toContainEqual(expect.stringContaining('providers.gemini is browser_direct_verified but endpoint/model'));
-    expect(errors).toContainEqual(expect.stringContaining('no "확인 날짜: YYYY-MM-DD"'));
+    expect(errors).toContainEqual('providers.gemini is browser_direct_verified but has no verified_on (YYYY-MM-DD)');
   });
 
-  it('passes a verified provider with real values and a dated PROVIDERS.md section', () => {
+  it('passes a verified provider with real values and a verified_on date', () => {
     const cfg = base();
-    cfg.providers.gemini = { endpoint: 'https://api.example.com/v1', model: 'model-x', browser_direct_verified: true };
-    const doc = '# Providers\n\n## gemini\n- 확인 날짜: 2026-11-04\n\n## anthropic\n- 확인 날짜: 2026-11-05\n';
-    expect(run(cfg, { providersDoc: doc }).errors).toEqual([]);
+    cfg.providers.gemini = { endpoint: 'https://api.example.com/v1', model: 'model-x', browser_direct_verified: true, verified_on: '2026-11-04' };
+    expect(run(cfg).errors).toEqual([]);
     expect(verifiedProviderOrigins(cfg)).toEqual(['https://api.example.com', 'https://api.anthropic.com']);
     expect(verifiedProviderOrigins(base())).toEqual(['https://generativelanguage.googleapis.com', 'https://api.anthropic.com']);
   });
@@ -74,16 +71,19 @@ describe('check-config', () => {
     expect(errors).toContainEqual('providers.anthropic.model "claude-other" is not in providers.anthropic.models');
   });
 
-  it('turns placeholder warnings into errors once the owning step is DONE', () => {
-    const readme = '| [S01](steps/S01-bible-viewer.md) | 제목 | S00 | x | y | DONE | - |\n| [S06](steps/S06.md) | b | S05 | x | y | TODO | - |';
-    const done = doneSteps(readme);
-    expect([...done]).toEqual(['S01']);
+  it('fails while the DB hash or the PBKDF2 iterations are still placeholders', () => {
     const cfg = base();
     cfg.bible_db.sha256 = '<파생 DB 해시>';
     cfg.backup.pbkdf2_iterations = '<구현 시 현재 권장값 확인>';
-    const { errors, warnings } = run(cfg, { done });
-    expect(errors).toContainEqual(expect.stringContaining('bible_db.sha256 is still a placeholder'));
-    expect(warnings).toContainEqual(expect.stringContaining('backup.pbkdf2_iterations'));
+    const { errors } = run(cfg);
+    expect(errors).toContainEqual('bible_db.sha256 is still a placeholder');
+    expect(errors).toContainEqual('backup.pbkdf2_iterations is still a placeholder');
+  });
+
+  it('fails a verified provider whose verified_on is not a date', () => {
+    const cfg = base();
+    cfg.providers.anthropic.verified_on = 'soon';
+    expect(run(cfg).errors.some((e) => e.includes('verified_on'))).toBe(true);
   });
 
   it('fails schema violations (e.g. unknown key, font size below 16px)', () => {

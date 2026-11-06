@@ -5,9 +5,10 @@
 // Usage:
 //   node scripts/check-config.mjs            # full config check
 //   node scripts/check-config.mjs --bibles   # only bible-related rules (quick static check)
-// Placeholders that become mandatory after a step is DONE are read from docs/spec/README.md:
-//   bible_db.sha256            → required once S01 is DONE
-//   backup.pbkdf2_iterations   → required once S06 is DONE; a number must equal the S06 decision
+// Every step is done, so these placeholders must be filled:
+//   bible_db.sha256            → hash of the derived DB (S01)
+//   backup.pbkdf2_iterations   → must equal the S06 decision
+// A browser_direct_verified provider must carry the date it was checked (providers.<name>.verified_on).
 import { readFileSync, existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
@@ -19,16 +20,6 @@ const isPlaceholder = (v) => typeof v === 'string' && /^<.*>$/.test(v);
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 /** S06 decision (DESIGN 4.2): OWASP Password Storage Cheat Sheet, PBKDF2-HMAC-SHA256, checked 2026-11-05. */
 export const CONFIRMED_PBKDF2_ITERATIONS = 600000;
-
-/** Steps marked DONE in the status table of docs/spec/README.md. */
-export function doneSteps(readmeText) {
-  const done = new Set();
-  for (const line of readmeText.split('\n')) {
-    const m = line.match(/^\|\s*\[(S\d{2})\][^|]*\|(.*)$/);
-    if (m && m[2].split('|').map((c) => c.trim()).includes('DONE')) done.add(m[1]);
-  }
-  return done;
-}
 
 /** Origins of providers verified for browser-direct calls (kept here for existing callers). */
 export const verifiedProviderOrigins = connectOriginsFromConfig;
@@ -56,10 +47,10 @@ export function checkBibles(cfg) {
 
 /**
  * @param {object} cfg parsed app.config.json
- * @param {{ schema: object, providersDoc?: string, done?: Set<string>, bibleSources?: object|null }} opts
+ * @param {{ schema: object, bibleSources?: object|null }} opts
  * @returns {{ errors: string[], warnings: string[] }}
  */
-export function checkConfig(cfg, { schema, providersDoc = '', done = new Set(), bibleSources = null, bibleSourcesOpts = {} }) {
+export function checkConfig(cfg, { schema, bibleSources = null, bibleSourcesOpts = {} }) {
   const errors = [];
   const warnings = [];
 
@@ -118,20 +109,17 @@ export function checkConfig(cfg, { schema, providersDoc = '', done = new Set(), 
       }
       if (url && url.protocol !== 'https:') errors.push(`providers.${name}.endpoint must use https (got ${url.protocol})`);
     }
-    const section = providersDoc.split(/^## /m).find((s) => s.toLowerCase().startsWith(name.toLowerCase()));
-    const date = section?.match(/확인 날짜:\s*(\S+)/)?.[1];
-    if (!date || !DATE_RE.test(date)) {
-      errors.push(`providers.${name} is browser_direct_verified but docs/PROVIDERS.md has no "확인 날짜: YYYY-MM-DD" for it`);
+    if (typeof p.verified_on !== 'string' || !DATE_RE.test(p.verified_on)) {
+      errors.push(`providers.${name} is browser_direct_verified but has no verified_on (YYYY-MM-DD)`);
     }
   }
 
-  const placeholderRules = [
-    ['S01', 'bible_db.sha256', cfg.bible_db.sha256],
-    ['S06', 'backup.pbkdf2_iterations', cfg.backup.pbkdf2_iterations],
+  const required = [
+    ['bible_db.sha256', cfg.bible_db.sha256],
+    ['backup.pbkdf2_iterations', cfg.backup.pbkdf2_iterations],
   ];
-  for (const [step, key, value] of placeholderRules) {
-    if (!isPlaceholder(value)) continue;
-    (done.has(step) ? errors : warnings).push(`${key} is still a placeholder (required once ${step} is DONE)`);
+  for (const [key, value] of required) {
+    if (isPlaceholder(value)) errors.push(`${key} is still a placeholder`);
   }
 
   const iter = cfg.backup.pbkdf2_iterations;
@@ -197,13 +185,9 @@ function main(argv) {
     errors.forEach((e) => console.error(`FAIL ${e}`));
     return errors.length ? 1 : 0;
   }
-  const readme = resolve(ROOT, 'docs/spec/README.md');
-  const providers = resolve(ROOT, 'docs/PROVIDERS.md');
   const sources = resolve(ROOT, 'config/bible-sources.json');
   const { errors, warnings } = checkConfig(cfg, {
     schema: readJson(resolve(ROOT, 'config/app.config.schema.json')),
-    providersDoc: existsSync(providers) ? readFileSync(providers, 'utf8') : '',
-    done: existsSync(readme) ? doneSteps(readFileSync(readme, 'utf8')) : new Set(),
     bibleSources: existsSync(sources) ? readJson(sources) : null,
     bibleSourcesOpts: {
       schema: readJson(resolve(ROOT, 'config/bible-sources.schema.json')),

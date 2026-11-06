@@ -97,6 +97,7 @@
         "gemini-flash-lite-latest"
       ],
       "browser_direct_verified": true,
+      "verified_on": "2026-11-06",
       "auth_header": "x-goog-api-key",
       "console_url": "https://aistudio.google.com/"
     },
@@ -104,6 +105,7 @@
       "endpoint": "https://api.openai.com/v1/chat/completions",
       "model": "<모델명, 구현 시 문서 확인>",
       "browser_direct_verified": false,
+      "verified_on": "2026-11-05",
       "unavailable_reason": "no_browser_access"
     },
     "anthropic": {
@@ -115,6 +117,7 @@
         "claude-opus-5-5"
       ],
       "browser_direct_verified": true,
+      "verified_on": "2026-11-05",
       "api_version": "2026-10-21",
       "auth_header": "authorization_bearer",
       "browser_access_header": "anthropic-dangerous-direct-browser-access",

@@ -102,9 +102,7 @@ if [ "$MODE" = full ]; then
   else record "e2e" SKIP "no e2e tests"; fi
 
   if [ -f public/data/bible.sqlite ]; then run_gate "verify:db" npm run --silent verify:db
-  elif grep -qE '^\| \[S01\].*\| DONE \|' docs/spec/README.md; then
-    record "verify:db" FAIL "public/data/bible.sqlite absent (run npm run db:build)"
-  else record "verify:db" SKIP "public/data/bible.sqlite absent (before S01)"; fi
+  else record "verify:db" FAIL "public/data/bible.sqlite absent (run npm run db:build)"; fi
 
   run_gate "build" npm run --silent build
 
