@@ -8,6 +8,7 @@ import { causeMessageKey, DAILY_LIMIT, getConnection, remainingToday, type Conne
 import { limitedStyle, styleProfileStatus, type StyleProfileStatus } from '../../core/sermon';
 import { deleteStyleProfileRecord, hasConsent } from '../../core/store';
 import { t, useLanguage } from '../../i18n';
+import { useBackHandler } from '../../app/back';
 
 interface Ctx {
   conn: Connection | null;
@@ -48,6 +49,7 @@ export function StyleProfileCard({ version }: { version: number }) {
   const [phase, setPhase] = useState<Phase>('idle');
   const [message, setMessage] = useState<{ text: string; error: boolean } | null>(null);
   const controller = useRef<AbortController | null>(null);
+  useBackHandler(phase === 'confirm', () => setPhase('idle'));
 
   const reload = useCallback(() => {
     load().then(setCtx, () => setFailed(true));

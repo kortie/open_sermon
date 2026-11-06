@@ -4,6 +4,7 @@
 import { useEffect, useId, useRef, useState } from 'react';
 import { routeHref, type RouteName } from '../app/router';
 import { t } from '../i18n';
+import { useBackHandler } from '../app/back';
 
 export const MENU_ITEMS: { name: RouteName; key: string }[] = [
   { name: 'home', key: 'nav.home' },
@@ -40,6 +41,7 @@ export function Menu({ current }: { current: RouteName }) {
     setOpen(false);
     button.current?.focus();
   }
+  useBackHandler(open, close);
 
   return (
     <>

@@ -9,6 +9,7 @@ import { maskKey } from '../../core/vault';
 import { t } from '../../i18n';
 import { ChoiceGroup } from '../ChoiceGroup';
 import { ConsentCheck } from '../ConsentCheck';
+import { useBackHandler } from '../../app/back';
 
 function openWizardAtProvider() {
   void preferences.setWizardStep('provider');
@@ -18,6 +19,7 @@ function openWizardAtProvider() {
 export function ConnectionPanel() {
   const [conn, setConn] = useState<Connection | null | undefined>(undefined);
   const [confirming, setConfirming] = useState(false);
+  useBackHandler(confirming, () => setConfirming(false));
   const [deleted, setDeleted] = useState(false);
   const available = selectableProviders().length > 0;
   const { transfer_notice } = usePreferences();

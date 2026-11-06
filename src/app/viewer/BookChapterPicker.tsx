@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { BOOKS, bookName, type BibleSource, type BookNo } from '../../core/bible';
 import { t, type Lang } from '../../i18n';
+import { useBackHandler } from '../back';
 
 interface Props {
   repo: BibleSource;
@@ -17,6 +18,7 @@ const OT_LAST = 39;
 
 export function BookChapterPicker({ repo, bible, lang, book, chapter, onGo }: Props) {
   const [picked, setPicked] = useState<BookNo | null>(null);
+  useBackHandler(picked !== null, () => setPicked(null));
 
   const bookButtons = (from: number, to: number) =>
     BOOKS.slice(from - 1, to).map((b) => (

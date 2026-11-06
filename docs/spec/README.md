@@ -32,6 +32,7 @@
 | [S14](steps/S14-gemini-provider.md) | Gemini 제공자(어댑터, 발급 안내, 기본 추천, 무료 플랜 주의) | S08, S09 | `core/llm`, `ui/setup-wizard` | llm-provider-adapter, setup-wizard | DONE | 보류 |
 | [S15](steps/S15-on-device-ai.md) | 휴대폰 안 AI(Android ML Kit Gemini Nano, 짧은 결과만, 진단 정보 안내) | S09, S13 | `core/llm`, `core/generate`, `app/platform` | llm-provider-adapter, generation-validator | DONE | 보류 |
 | [S16](steps/S16-about-coffee-icon.md) | 만든이 화면(문의, 라이선스, 커피 사 주기 Play 결제), 앱 아이콘과 시작 화면 | S12, S13 | `src/app/about`, `app/platform`, `android/` | sermon-verify | DONE | 보류 |
+| [S17](steps/S17-back-key.md) | 뒤로 가기 키(화면 안 상태 → 이전 화면 → 홈 → 앱 나가기) | S13, S16 | `src/app/back.ts`, `android/` | mobile-long-press-selection, setup-wizard | DONE | 보류 |
 
 상태 값: `TODO` → `IN_PROGRESS` → `DONE`. 수동 검증 값: `-`(없음) / `보류`(backlog에 있음) / `완료`.
 

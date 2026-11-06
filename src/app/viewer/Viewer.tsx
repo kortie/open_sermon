@@ -12,6 +12,7 @@ import { BookChapterPicker } from './BookChapterPicker';
 import { ChapterView } from './ChapterView';
 import { ReferenceForm } from './ReferenceForm';
 import { SearchPanel } from './SearchPanel';
+import { useBackHandler } from '../back';
 
 export interface Position {
   book: BookNo;
@@ -52,6 +53,9 @@ export function Viewer({ initialRef, initialQuery }: Props) {
   }, []);
 
   const toggle = (p: Panel) => setPanel((cur) => (cur === p ? 'none' : p));
+  // Back key: close an open panel first, then the search tab opened from the reader (DESIGN ch. 8).
+  useBackHandler(tab === 'search' && initialQuery === undefined, () => setTab('read'));
+  useBackHandler(panel !== 'none', () => setPanel('none'));
 
   const toolbar = (
     <div className="reader-bar" role="toolbar" aria-label={t('viewer.toolbar')} data-testid="reader-bar">

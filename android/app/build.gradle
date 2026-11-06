@@ -7,7 +7,7 @@ android {
         applicationId "app.opensermon.meditation"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
+        versionCode 100000
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
@@ -16,10 +16,29 @@ android {
             ignoreAssetsPattern = '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
         }
     }
+    // Upload key for Play (DESIGN 3.17, S16): read from android/keystore.properties, which is never committed.
+    // Without it the release build is produced unsigned (Play needs it signed with the upload key).
+    def keystoreFile = rootProject.file('keystore.properties')
+    def keystore = new Properties()
+    if (keystoreFile.exists()) keystoreFile.withInputStream { keystore.load(it) }
+    signingConfigs {
+        if (keystoreFile.exists()) {
+            upload {
+                storeFile rootProject.file(keystore['storeFile'])
+                storePassword keystore['storePassword']
+                keyAlias keystore['keyAlias']
+                keyPassword keystore['keyPassword']
+            }
+        }
+    }
     buildTypes {
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            // R8: shrink, optimize and obfuscate code; drop unused resources. The mapping file for Play's
+            // crash deobfuscation is build/outputs/mapping/release/mapping.txt.
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            if (keystoreFile.exists()) signingConfig signingConfigs.upload
         }
     }
 }

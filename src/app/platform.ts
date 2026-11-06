@@ -143,3 +143,39 @@ export function nativeCoffee(cfg: { product_id: string; platforms: readonly stri
 
 /** App version shown on the About screen (package.json, injected at build time). */
 export const APP_VERSION: string = __APP_VERSION__;
+
+/**
+ * Launch splash (DESIGN 3.17). In the app the native launch splash stays until the web app says it is
+ * ready, so the web splash in index.html needs no minimum time there; in the browser it shows for a
+ * moment so it reads as a screen, not a flicker.
+ */
+export const WEB_SPLASH_MIN_MS = 600;
+
+export function webSplashMinMs(native = isNativeApp()): number {
+  return native ? 0 : WEB_SPLASH_MIN_MS;
+}
+
+interface ShellPlugin {
+  ready(): Promise<void>;
+  exit(): Promise<void>;
+  addListener(event: 'back', fn: () => void): Promise<PluginListenerHandle>;
+}
+
+const shell = (native: boolean): ShellPlugin | null =>
+  native && Capacitor.isPluginAvailable('Shell') ? registerPlugin<ShellPlugin>('Shell') : null;
+
+/** Tell the native launch splash that the first screen has rendered; nothing in the browser. */
+export async function signalLaunchReady(native = isNativeApp()): Promise<void> {
+  await shell(native)?.ready();
+}
+
+/**
+ * Android back key/gesture → the window event `app:back` (src/app/back.ts). Returns how to leave the
+ * app when there is nothing left to go back to; null in the browser (its own back button walks history).
+ */
+export async function connectBackKey(eventName: string, native = isNativeApp()): Promise<(() => void) | null> {
+  const plugin = shell(native);
+  if (!plugin) return null;
+  await plugin.addListener('back', () => window.dispatchEvent(new Event(eventName)));
+  return () => void plugin.exit();
+}

@@ -11,6 +11,7 @@
     "build": "tsc --noEmit -p tsconfig.json && vite build",
     "build:app": "tsc --noEmit -p tsconfig.json && vite build --mode app && node scripts/check-app-build.mjs && cap sync",
     "android:debug": "npm run build:app && cd android && ./gradlew assembleDebug",
+    "android:release": "npm run build:app && cd android && ./gradlew bundleRelease assembleRelease",
     "preview": "vite preview --port 4173 --strictPort",
     "lint": "eslint . && node scripts/check-i18n.mjs",
     "test": "vitest run",
@@ -20,7 +21,9 @@
     "verify:db": "node scripts/verify-db.mjs",
     "db:build": "node scripts/build-bible-db.mjs",
     "notices": "node scripts/build-notices.mjs",
-    "icons": "node scripts/build-icons.mjs"
+    "icons": "node scripts/build-icons.mjs",
+    "store:screenshots": "playwright test --config store/playwright.config.ts",
+    "store:graphics": "node scripts/build-store-graphics.mjs"
   },
   "dependencies": {
     "@capacitor/android": "8.5.3",

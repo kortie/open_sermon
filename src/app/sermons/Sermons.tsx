@@ -19,6 +19,7 @@ import { t, useLanguage } from '../../i18n';
 import { ChoiceGroup } from '../../ui/ChoiceGroup';
 import { ConsentCheck } from '../../ui/ConsentCheck';
 import { StyleProfileCard } from '../../ui/sermons/StyleProfileCard';
+import { useBackHandler } from '../back';
 
 const ACCEPT = '.txt,.docx,.pdf,text/plain,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document';
 
@@ -35,6 +36,7 @@ type View = { name: 'list'; status?: string } | { name: 'add' } | { name: 'previ
 
 export function Sermons() {
   const [view, setView] = useState<View>({ name: 'list' });
+  useBackHandler(view.name !== 'list', () => setView({ name: 'list' }));
   return (
     <div className="sermons" data-testid="sermons">
       {view.name === 'list' && <SermonList status={view.status} onAdd={() => setView({ name: 'add' })} />}
@@ -58,6 +60,7 @@ function SermonList({ status, onAdd }: { status?: string; onAdd: () => void }) {
   const [items, setItems] = useState<SermonMeta[] | null>(null);
   const [failed, setFailed] = useState(false);
   const [confirming, setConfirming] = useState<string | null>(null);
+  useBackHandler(confirming !== null, () => setConfirming(null));
   const [message, setMessage] = useState(status ?? '');
   const [version, setVersion] = useState(0);
 

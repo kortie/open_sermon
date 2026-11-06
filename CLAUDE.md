@@ -1,6 +1,6 @@
 # CLAUDE.md — 성경 묵상 앱 (서버 없음)
 
-이 파일은 Claude Code가 이 저장소에서 작업할 때 따라야 할 규칙이다. 상세 설계는 `docs/DESIGN.md`(v0.21)를 기준으로 하고, 단계별 범위와 검증은 `docs/spec/`(상태 표 `docs/spec/README.md`, 단계 문서 `docs/spec/steps/SXX-*.md`)를 따른다. 설계와 이 파일이 충돌하면 작업을 멈추고 사용자에게 확인한다.
+이 파일은 Claude Code가 이 저장소에서 작업할 때 따라야 할 규칙이다. 상세 설계는 `docs/DESIGN.md`(v0.22)를 기준으로 하고, 단계별 범위와 검증은 `docs/spec/`(상태 표 `docs/spec/README.md`, 단계 문서 `docs/spec/steps/SXX-*.md`)를 따른다. 설계와 이 파일이 충돌하면 작업을 멈추고 사용자에게 확인한다.
 
 ---
 
@@ -10,7 +10,7 @@
 
 - **서버가 없다.** 정적 웹 자산과 본문 DB를 앱 패키지 안에 넣어 배포하고, 모든 데이터와 실행은 기기 안에서 한다. 앱이 원격 웹 자산을 불러오지 않는다(Capacitor `server.url` 금지).
 - 외부 통신은 사용자가 선택한 LLM 제공자의 공식 API 호출뿐이다. 예외: 휴대폰 안 AI(Android ML Kit GenAI)의 SDK 진단 정보 전송(DESIGN 2.2, 3.6.1, v0.20), Android "커피 사 주기"의 Google Play 결제(DESIGN 2.2, 3.17, v0.21).
-- 스택: TypeScript, Vite, React, sql.js(번들 `bible.sqlite` 읽기), IndexedDB(사용자 데이터), WebCrypto(암호화), Capacitor 8(앱 래핑, 파일 공유, 휴대폰 안 AI 네이티브 플러그인 `OnDeviceAi`, Google Play 결제 플러그인 `Coffee`), Vitest, Playwright(모바일 뷰포트 테스트, 브라우저 빌드 기준)
+- 스택: TypeScript, Vite, React, sql.js(번들 `bible.sqlite` 읽기), IndexedDB(사용자 데이터), WebCrypto(암호화), Capacitor 8(앱 래핑, 파일 공유, 휴대폰 안 AI 네이티브 플러그인 `OnDeviceAi`, Google Play 결제 플러그인 `Coffee`, 시작 화면·뒤로 가기 키 플러그인 `Shell`), Vitest, Playwright(모바일 뷰포트 테스트, 브라우저 빌드 기준)
 
 ---
 
@@ -48,7 +48,7 @@
 open_sermon/
 ├── CLAUDE.md
 ├── docs/
-│   ├── DESIGN.md            # 설계 (v0.21)
+│   ├── DESIGN.md            # 설계 (v0.22)
 │   ├── PROVIDERS.md         # 제공자 브라우저 직접 호출 확인 기록 (S07)
 │   └── spec/
 │       ├── README.md        # 단계 상태 표
@@ -115,6 +115,7 @@ open_sermon/
 ### 4.3 프런트엔드
 - 상태 관리는 최소화한다. 서버 상태 라이브러리는 필요 없다. 화면 상태는 React 상태 또는 간단한 스토어로 관리한다.
 - 앱 모드(`build:app`)는 서비스 워커를 등록하지 않는다. 파일 내보내기는 앱에서 공유 시트(`@capacitor/share`)로, 외부 링크는 기기 기본 브라우저로 연다. 플랫폼 분기는 `src/app/platform.ts`에만 둔다.
+- 뒤로 가기 키는 한 번에 한 가지를 되돌린다(DESIGN 8장, v0.22). 화면 안에 닫거나 되돌릴 상태(패널, 확인 질문, 입력 양식, 단계)를 새로 만들면 `useBackHandler`(`src/app/back.ts`)로 등록한다.
 - 앱 화면에는 고정 상단 메뉴를 두지 않는다. 메뉴는 플로팅 버튼으로 여는 사이드 메뉴다(DESIGN 8장). 읽기 화면 위쪽은 한 줄 도구 막대(책·장, 역본, 검색)만 둔다.
 - 모바일 전용: 뷰포트 `width=device-width, initial-scale=1`, 최대 폭 480px 중앙 레이아웃, 터치 타깃 44×44px 이상.
 - 롱터치: 임계값 450ms(`ui.long_press_ms`). 본문 영역에서만 `contextmenu`와 기본 텍스트 선택을 막는다. `touchstart`, `touchmove`는 `passive: false`로 등록한다.

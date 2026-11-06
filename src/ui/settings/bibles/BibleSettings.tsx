@@ -8,6 +8,7 @@ import { forgetImportedBible } from '../../../app/useBible';
 import { removeImportedBible } from '../../../core/bible-import';
 import { listImportedBibles, type ImportedBibleRecord } from '../../../core/store';
 import { t, useLanguage } from '../../../i18n';
+import { useBackHandler } from '../../../app/back';
 
 export function BibleSettings() {
   const id = useId();
@@ -16,6 +17,7 @@ export function BibleSettings() {
   const [list, setList] = useState<ImportedBibleRecord[] | null>(null);
   const [failed, setFailed] = useState(false);
   const [asking, setAsking] = useState<ImportedBibleRecord | null>(null);
+  useBackHandler(asking !== null, () => setAsking(null));
   const [message, setMessage] = useState<{ text: string; error: boolean } | null>(null);
 
   const reload = useCallback(() => {

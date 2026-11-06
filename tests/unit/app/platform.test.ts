@@ -151,3 +151,19 @@ describe('coffee bridge', () => {
     expect(coffeeFailure(null)).toBe('unknown');
   });
 });
+
+// S16: one launch splash (DESIGN 3.17). The app relies on the native splash, the browser on index.html.
+describe('launch splash', () => {
+  it('web splash minimum only in the browser', async () => {
+    const { webSplashMinMs, WEB_SPLASH_MIN_MS } = await import('../../../src/app/platform');
+    expect(webSplashMinMs(false)).toBe(WEB_SPLASH_MIN_MS);
+    expect(webSplashMinMs(true)).toBe(0);
+    expect(webSplashMinMs()).toBe(WEB_SPLASH_MIN_MS);
+  });
+
+  it('ready signal is a no-op without the native plugin', async () => {
+    const { signalLaunchReady } = await import('../../../src/app/platform');
+    await expect(signalLaunchReady()).resolves.toBeUndefined();
+    await expect(signalLaunchReady(true)).resolves.toBeUndefined();
+  });
+});

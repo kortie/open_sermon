@@ -27,6 +27,7 @@ import { listImportedBibles, type Language } from '../../../core/store';
 import { t, useLanguage } from '../../../i18n';
 import { ChoiceGroup } from '../../ChoiceGroup';
 import { ConsentCheck } from '../../ConsentCheck';
+import { useBackHandler } from '../../../app/back';
 
 type Step = 1 | 2 | 3 | 4 | 5;
 const SAMPLE_KEYS = ['l01', 'l02', 'l03', 'l04', 'l05', 'l06', 'l07', 'l08', 'l09', 'l10'];
@@ -109,6 +110,7 @@ export function ImportWizard() {
     setError('');
     setStep((s) => (s > 1 ? ((s - 1) as Step) : s));
   };
+  useBackHandler(step > 1 && step < 5 && !busy, back);
 
   return (
     <section className="import" aria-labelledby={`${id}-h`} data-testid="bible-import" data-step={step}>

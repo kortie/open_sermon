@@ -9,6 +9,7 @@ import { useLongPress, useTapOutside } from './useLongPress';
 import { recordStats, useSelection } from './useSelection';
 import { VerseList } from './VerseList';
 import type { Position } from './Viewer';
+import { useBackHandler } from '../back';
 
 interface Props {
   repo: BibleSource;
@@ -28,6 +29,7 @@ export function ChapterView({ repo, bible, lang, pos, onGo }: Props) {
   const { state: sel, send } = useSelection(`${bible}:${pos.book}:${pos.chapter}`);
   const [status, setStatus] = useState<'copied' | 'copy_failed' | null>(null);
   const selecting = sel.mode === 'selecting';
+  useBackHandler(selecting, () => send({ t: 'clear_all' }));
   const reference = selecting ? formatReference(selectionReference(pos.book, pos.chapter, sel.verses), lang) : '';
 
   useLongPress(listRef, {

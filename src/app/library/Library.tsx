@@ -17,6 +17,7 @@ import {
 } from '../../core/compose';
 import { t, useLanguage, type Lang } from '../../i18n';
 import { ChoiceGroup } from '../../ui/ChoiceGroup';
+import { useBackHandler } from '../back';
 
 type KindFilter = LibraryKind | 'all';
 
@@ -38,6 +39,8 @@ export function Library({ refParam, kindParam }: { refParam?: string; kindParam?
   const [tag, setTag] = useState('');
   const [editing, setEditing] = useState<LibraryItem | 'new' | null>(null);
   const [confirming, setConfirming] = useState<string | null>(null);
+  useBackHandler(editing !== null, () => setEditing(null));
+  useBackHandler(confirming !== null, () => setConfirming(null));
   const [message, setMessage] = useState('');
 
   const reload = useCallback(() => {

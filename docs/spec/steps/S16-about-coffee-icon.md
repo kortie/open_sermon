@@ -33,7 +33,7 @@ ios/App/App/Assets.xcassets/AppIcon.appiconset, Splash.imageset
 public/icons/*.png, public/manifest.webmanifest, index.html (시작 화면), src/main.tsx (최소 0.6초)
 LICENSE, NOTICE, scripts/build-notices.mjs, public/licenses/app.txt, third-party.txt
 android/app/build.gradle                              # com.android.billingclient:billing:9.1.0
-android/app/src/main/java/app/opensermon/meditation/CoffeePlugin.java, MainActivity.java
+android/app/src/main/java/app/opensermon/meditation/CoffeePlugin.java, ShellPlugin.java(S17에서 Launch → Shell), MainActivity.java
 src/app/platform.ts                                   # coffeeBridgeFor, coffeeFailure, nativeCoffee, APP_VERSION
 src/app/about/About.tsx, src/app/router.ts, src/app/App.tsx, src/ui/Menu.tsx, src/app/app.css
 src/i18n/ko.json, en.json                             # nav.about, about.*
@@ -47,7 +47,7 @@ tests/unit/app/platform.test.ts, tests/e2e/about.spec.ts
 - 브라우저 빌드에는 커피 브리지와 카드가 없다.
 - 만든이 화면: 메뉴로 들어가고, JuanStudio·버전·Apache-2.0이 보이고, 전문과 고지를 펼치고 닫을 수 있다. 360px에서 가로 스크롤이 없고 외부 요청이 없다.
 - 문의 메일 버튼은 실제 주소가 있을 때만 `mailto:`로 보인다.
-- 시작 화면이 앱이 뜬 뒤 사라진다.
+- 시작 화면이 앱이 뜬 뒤 사라진다. 웹 시작 화면 최소 시간은 브라우저에만 있고, 앱에서는 준비 신호를 보낸다(브라우저에서는 아무것도 안 함).
 - 고지 파일이 `node_modules`와 맞는다(`build-notices --check`, 정적 점검).
 
 ## 게이트
@@ -60,6 +60,8 @@ tests/unit/app/platform.test.ts, tests/e2e/about.spec.ts
   - [ ] "메일 보내기"가 메일 앱을 kortie00@gmail.com으로 여는지.
   - [ ] 오픈소스 고지의 네이티브 라이브러리(AndroidX, ML Kit, Play Billing) 약관 표기를 공식 문서로 확인.
   - [ ] iOS 아이콘·시작 화면 확인과 커피 숨김(맥 필요).
+  - [ ] 업로드 키를 만들어 `android/keystore.properties`에 넣고, 서명된 AAB를 Play Console 내부 테스트 트랙에 올린다. `mapping.txt`도 함께 올린다.
+  - [ ] 스토어 등록정보에 `store/google-play/`의 아이콘, 대표 그래픽, 스크린샷을 올리고 화면에서 잘리는 곳이 없는지 본다.
 
 ## 완료 정의
 - [x] 자동 게이트 PASS
@@ -82,3 +84,15 @@ tests/unit/app/platform.test.ts, tests/e2e/about.spec.ts
 - 후속:
   - 문의 메일 kortie00@gmail.com을 `about.contact_email`에 넣었다.
   - 오픈소스 고지의 네이티브 라이브러리 약관 표기는 공식 문서 확인 전이다.
+
+### 2026-11-06 (시작 화면 수정)
+- 사용자 보고: 시작 화면이 두 번 나온다. 실기기 연속 캡처로 확인: Android 12 시스템 시작 화면(큰 아이콘, 아래 JuanStudio) 뒤에 웹 시작 화면(작은 아이콘, 가운데 JuanStudio)이 약 0.8초 더 나왔다.
+- 수정: 앱에서는 시스템 시작 화면을 웹 첫 화면이 그려질 때까지 붙잡고(`MainActivity` OnPreDrawListener, 최대 3초), 웹이 `Launch.ready`로 알린다(S17에서 `Shell.ready`로 이름 변경). 웹 시작 화면 최소 0.6초는 브라우저에만 둔다.
+- 실기기 재확인: 홈 → 시스템 시작 화면 → 앱 첫 화면, 시작 화면 한 번.
+
+### 2026-11-06 (릴리스 빌드, 스토어 자료)
+- 사용자 요청: 릴리스 빌드 난독화, 스토어 등록용 앱 아이콘·그래픽 이미지·스크린샷.
+- 릴리스: `minifyEnabled true`, `shrinkResources true`, `proguard-android-optimize.txt`. 앱 규칙은 줄 번호만 남기고 원본 파일 이름 숨김(플러그인 클래스는 Capacitor 소비자 규칙이 지킴). 업로드 키는 `android/keystore.properties`(gitignore, 예시 파일 `keystore.properties.example`), 없으면 서명 없이 빌드. `npm run android:release` → AAB 7.0MB, APK 6.0MB(디버그 15.8MB).
+- 실기기: 릴리스 APK를 디버그 키로 임시 서명해 설치. 디버그 불가(flags=0x0) 상태로 실행, 비정상 종료 없음, 시작 화면이 약 0.6초에 걷힘(Launch 플러그인이 난독화 뒤에도 동작).
+- 스토어 자료(`store/`): 규격은 Play Console 도움말 9866151(2026-11-06 확인). 512 아이콘, 대표 그래픽 ko·en(1024×500, 알파 없음), 스크린샷 ko·en 각 6장(1080×1920, 알파 없음; 홈, 구절 선택, 예시와 한마디, 읽기, 말씀 구성표, 만든이). 생성 결과 화면은 테스트 모의 응답을 쓴다.
+- 새 명령: `npm run android:release`, `store:screenshots`, `store:graphics`.

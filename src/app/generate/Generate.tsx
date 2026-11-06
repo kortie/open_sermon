@@ -19,6 +19,7 @@ import { ResultPanel } from '../../ui/result/ResultPanel';
 import { bundledBible, usePreferences } from '../preferences';
 import { navigate } from '../router';
 import { useBible, useReader } from '../useBible';
+import { useBackHandler } from '../back';
 
 type Kind = 'sermon' | 'example' | 'one_liner';
 /** Library kind shown first in the independent result (the draft has no library of its own). */
@@ -158,6 +159,8 @@ function GenerateScreen({ refText, reference, kind, ctx, bibleId, verses, import
   const [words, setWords] = useState(() => queryKeywords(verses.map((v) => v.text).join(' ')).join(', '));
   const [phase, setPhase] = useState<Phase>({ p: 'confirm' });
   const controller = useRef<AbortController | null>(null);
+  // Back key while sending: stop the request (same as the cancel button).
+  useBackHandler(phase.p === 'sending', () => controller.current?.abort());
   const autoSent = useRef(false);
 
   useEffect(() => () => controller.current?.abort(), []);

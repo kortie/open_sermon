@@ -15,6 +15,7 @@ import {
 import { deletePersona, getActivePersona, listPersonas, savePersona, setActivePersona } from '../../core/store';
 import { t } from '../../i18n';
 import { ChoiceGroup } from '../../ui/ChoiceGroup';
+import { useBackHandler } from '../back';
 
 const label = (f: PersonaField, code: string) => t(optionLabelKey(f, code));
 
@@ -24,6 +25,8 @@ export function Personas() {
   const [failed, setFailed] = useState(false);
   const [editing, setEditing] = useState<Persona | null>(null);
   const [confirming, setConfirming] = useState<string | null>(null);
+  useBackHandler(editing !== null, () => setEditing(null));
+  useBackHandler(confirming !== null, () => setConfirming(null));
   const [message, setMessage] = useState('');
 
   const reload = useCallback(() => {

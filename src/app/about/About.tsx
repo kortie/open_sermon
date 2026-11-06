@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { about, support } from '../../../config/app.config.json';
 import { t } from '../../i18n';
 import { APP_VERSION, coffeeFailure, nativeCoffee, type CoffeeBridge, type CoffeeFailure } from '../platform';
+import { useBackHandler } from '../back';
 
 const isPlaceholder = (v: string) => /^<.*>$/.test(v);
 const LICENSE_FILES = { app: 'licenses/app.txt', third_party: 'licenses/third-party.txt' } as const;
@@ -98,6 +99,7 @@ function Coffee({ bridge }: { bridge: CoffeeBridge }) {
 
 export function About() {
   const [open, setOpen] = useState<LicenseDoc | null>(null);
+  useBackHandler(open !== null, () => setOpen(null));
   const [coffee] = useState(() => nativeCoffee(support.coffee));
   const email = isPlaceholder(about.contact_email) ? null : about.contact_email;
 

@@ -5,6 +5,7 @@ import { wizard } from '../../../config/app.config.json';
 import { navigate } from '../../app/router';
 import { preferences } from '../../app/preferences';
 import { t } from '../../i18n';
+import { useBackHandler } from '../../app/back';
 
 export type StepId = 'language' | 'bible' | 'llm_choice' | 'provider' | 'get_key' | 'paste_key' | 'verify' | 'consent' | 'done';
 
@@ -38,6 +39,8 @@ export function Shell({ step, title, hint, children, actions }: { step: StepId; 
 }
 
 export function BackButton({ to }: { to: StepId }) {
+  // The back key does what this button does (DESIGN ch. 8).
+  useBackHandler(true, () => goStep(to));
   return (
     <button type="button" className="button button--secondary" onClick={() => goStep(to)} data-testid="wizard-back">
       {t('wizard.back')}

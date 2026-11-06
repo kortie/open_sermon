@@ -22,6 +22,7 @@ import { bundledBible, usePreferences } from '../preferences';
 import { navigate } from '../router';
 import { useBible } from '../useBible';
 import { readHandOff } from './handoff';
+import { useBackHandler } from '../back';
 
 const refLabel = (ref: string, lang: Lang) => {
   const p = parseReference(ref);
@@ -39,6 +40,7 @@ function OutlineList() {
   const [items, setItems] = useState<OutlineMeta[] | null>(null);
   const [failed, setFailed] = useState(false);
   const [confirming, setConfirming] = useState<string | null>(null);
+  useBackHandler(confirming !== null, () => setConfirming(null));
   const [message, setMessage] = useState('');
   const reload = useCallback(() => {
     listOutlines().then(setItems, () => setFailed(true));

@@ -23,6 +23,7 @@ import { listImportedBibles } from '../../core/store';
 import { t, useLanguage } from '../../i18n';
 import { ChoiceGroup } from '../ChoiceGroup';
 import { ConsentCheck } from '../ConsentCheck';
+import { useBackHandler } from '../../app/back';
 
 export function BackupPanel() {
   return (
@@ -50,6 +51,14 @@ function ExportForm() {
   const [bibleCount, setBibleCount] = useState(0);
   const [includeBibles, setIncludeBibles] = useState(false);
   const [askBibles, setAskBibles] = useState(false);
+  useBackHandler(askKeys, () => {
+    setIncludeKeys(false);
+    setAskKeys(false);
+  });
+  useBackHandler(askBibles, () => {
+    setIncludeBibles(false);
+    setAskBibles(false);
+  });
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   const [file, setFile] = useState<{ url: string; name: string; blob: Blob } | null>(null);

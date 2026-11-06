@@ -1,16 +1,32 @@
-import { StrictMode } from 'react';
+import { StrictMode, useEffect, type ReactNode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { App } from './app/App';
-import { nativeDeviceAi } from './app/platform';
+import { BACK_EVENT, installBackKey } from './app/back';
+import { connectBackKey, nativeDeviceAi, signalLaunchReady, webSplashMinMs } from './app/platform';
 import { loadPreferences } from './app/preferences';
 import { setDeviceAiBridge } from './core/llm';
 import './app/app.css';
 
 setDeviceAiBridge(nativeDeviceAi());
 
-/** The splash in index.html stays at least this long so it reads as a screen, not a flicker (DESIGN 3.17). */
-const SPLASH_MIN_MS = 600;
-const splashShown = new Promise<void>((resolve) => setTimeout(resolve, SPLASH_MIN_MS));
+// Android back key: one press undoes one thing (DESIGN 8장). In the browser nothing sends the event
+// and there is no app to leave.
+let leaveApp: (() => void) | null = null;
+installBackKey(() => leaveApp?.());
+void connectBackKey(BACK_EVENT).then((exit) => {
+  leaveApp = exit;
+});
+
+// Launch splash (DESIGN 3.17): browser → the index.html splash for a moment; app → the native splash
+// stays until the first screen has rendered, then it is told to go (one splash, no blank screen).
+const splashShown = new Promise<void>((resolve) => setTimeout(resolve, webSplashMinMs()));
+
+function LaunchReady({ children }: { children: ReactNode }) {
+  useEffect(() => {
+    signalLaunchReady().catch(() => undefined);
+  }, []);
+  return children;
+}
 
 const root = document.getElementById('root');
 if (root) {
@@ -18,7 +34,9 @@ if (root) {
   void Promise.all([loadPreferences(), splashShown]).then(() => {
     createRoot(root).render(
       <StrictMode>
-        <App />
+        <LaunchReady>
+          <App />
+        </LaunchReady>
       </StrictMode>,
     );
   });
