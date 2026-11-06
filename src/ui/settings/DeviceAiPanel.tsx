@@ -3,7 +3,7 @@
 // separate tap. Android shows the ML Kit diagnostics disclosure (CLAUDE.md rule 2 exception).
 import { useCallback, useEffect, useState } from 'react';
 import { on_device_ai } from '../../../config/app.config.json';
-import { deviceAiBridge, deviceAiStatus, isDeviceAiEnabled, setDeviceAiEnabled, type DeviceAiStatus } from '../../core/llm';
+import { deviceAiBridge, deviceAiStatus, isDeviceAiEnabled, setDeviceAiEnabled, watchDeviceAiDownload, type DeviceAiStatus } from '../../core/llm';
 import { t } from '../../i18n';
 
 type Download = { s: 'idle' } | { s: 'running'; bytes: number } | { s: 'failed' };
@@ -43,6 +43,13 @@ export function DeviceAiPanel() {
     };
   }, [bridge]);
 
+  // While the OS downloads the model, keep asking so the card turns to "ready" without a tap.
+  const watching = status === 'downloading' && download.s !== 'running';
+  useEffect(() => {
+    if (!bridge || !watching) return;
+    return watchDeviceAiDownload(setStatus, bridge);
+  }, [bridge, watching]);
+
   if (!bridge) return null;
 
   const startDownload = async () => {
@@ -72,6 +79,12 @@ export function DeviceAiPanel() {
       <p role="status" aria-live="polite" data-testid="device-ai-status">
         {status === null ? t('settings.device_ai.status_checking') : t(`settings.device_ai.status_${status}`)}
       </p>
+      {/* The OS gives no total size, so an indeterminate bar shows that the download is under way. */}
+      {(status === 'downloading' || download.s === 'running') && (
+        <div className="device-ai__bar" role="progressbar" aria-label={t('settings.device_ai.downloading_label')} data-testid="device-ai-downloading">
+          <span className="device-ai__bar-fill" />
+        </div>
+      )}
       {(status === 'downloadable' || status === 'downloading') && <p className="card__muted">{t('settings.device_ai.model_note')}</p>}
       {download.s === 'running' && (
         <p className="card__muted" data-testid="device-ai-progress">
@@ -86,9 +99,10 @@ export function DeviceAiPanel() {
         </p>
       )}
       <div className="stack-actions">
-        {status === 'downloadable' && download.s !== 'running' && (
+        {/* While the OS is already downloading, the same call joins that download and reports progress. */}
+        {(status === 'downloadable' || status === 'downloading') && download.s !== 'running' && (
           <button type="button" className="button" onClick={() => void startDownload()} data-testid="device-ai-download">
-            {t('settings.device_ai.download')}
+            {t(status === 'downloading' ? 'settings.device_ai.download_follow' : 'settings.device_ai.download')}
           </button>
         )}
         {status === 'available' && (

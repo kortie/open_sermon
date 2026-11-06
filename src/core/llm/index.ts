@@ -13,6 +13,7 @@ export {
   deviceCause,
   deviceClient,
   deviceModel,
+  watchDeviceAiDownload,
   isDeviceAiEnabled,
   setDeviceAiBridge,
   setDeviceAiEnabled,

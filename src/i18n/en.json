@@ -133,16 +133,18 @@
     "bible_reset_notice": "The chosen version was deleted, so the default version is used.",
     "device_ai": {
       "title": "Phone's built-in AI",
-      "hint": "Make everyday examples and light remarks with the AI built into this phone, without a key. The passage and keywords you choose stay on the phone.",
-      "scope_note": "A Reflection Draft is too long for the phone's AI. To make a draft, connect Gemini or Claude.",
+      "hint": "Make Reflection Drafts, everyday examples and light remarks with the AI built into this phone, without a key. The passage, keywords and persona you choose stay on the phone.",
+      "scope_note": "The phone's AI is a small model, so its writing may be simpler than Gemini or Claude. It does not use your sermon manuscripts or style profile.",
       "connected_note": "When an AI is connected, the connected AI is used first.",
       "status_checking": "Checking the status.",
       "status_available": "Ready to use.",
-      "status_downloadable": "The AI model needs to be downloaded first. Connect to Wi-Fi, then tap Download.",
-      "status_downloading": "The AI model is downloading. You can use it as soon as it's done.",
+      "status_downloadable": "To use the AI built into Android, the AI model needs a one-time download. Connect to Wi-Fi, then tap Download. It can take tens of minutes, depending on your Wi-Fi.",
+      "status_downloading": "The AI model for Android's built-in AI is downloading (one time only). It downloads only on Wi-Fi and can take tens of minutes. The phone keeps downloading even if you close the app. When it's done, tap Check again.",
       "status_unavailable": "The phone's AI is not available on this phone.",
-      "model_note": "AI model: the program the phone uses to write text. The phone maker provides it, and it stays on the phone once downloaded.",
+      "model_note": "AI model: the program Android's AI uses to write text. Google provides it, and it stays on the phone once downloaded.",
       "download": "Download",
+      "downloading_label": "Downloading the AI model",
+      "download_follow": "Show download progress",
       "download_progress": "Downloading ({mb} MB)",
       "download_failed": "Download failed. Check Wi-Fi and free space, then tap again.",
       "check_again": "Check again",
@@ -663,7 +665,8 @@
     "no_connection_outline": "Use the Message Outline",
     "device_notice_body": "It is made on this phone from the passage and keywords you chose. Nothing is sent off the phone.",
     "device_notice_wait": "It may take a little while on some phones. Keep the app on screen while you wait.",
-    "no_connection_device": "The phone's AI can make only short examples and light remarks, without a key. Turn it on in Settings → Phone's built-in AI."
+    "sending_device": "Making it on this phone. A draft can take a minute or two. Keep the app on screen while you wait.",
+    "no_connection_device": "You can also make a draft without a key, with the phone's built-in AI. Turn it on in Settings → Phone's built-in AI."
   },
   "result": {
     "ai_notice": "This is an AI-generated draft. Revise it to make it your own.",

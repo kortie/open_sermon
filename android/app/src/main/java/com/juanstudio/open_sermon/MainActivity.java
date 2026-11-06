@@ -11,6 +11,8 @@ import com.getcapacitor.PluginHandle;
 public class MainActivity extends BridgeActivity {
     /** Longest the launch splash waits for the web app (DESIGN 3.17); after this the app shows anyway. */
     private static final long SPLASH_MAX_MS = 3000;
+    /** Shortest time the launch splash stays, even when the web app is ready sooner. */
+    private static final long SPLASH_MIN_MS = 1500;
 
     private volatile boolean webReady = false;
 
@@ -32,7 +34,8 @@ public class MainActivity extends BridgeActivity {
 
     /**
      * Keep the launch splash (Android 12+ system splash, or the launch theme's splash image below 12) on
-     * screen until the web app has rendered, so there is one splash and no blank WebView in between.
+     * screen until the web app has rendered (and for at least SPLASH_MIN_MS), so there is one splash and no
+     * blank WebView in between.
      * Returning false from onPreDraw skips the frame; the system schedules the next one.
      */
     private void holdSplashUntilWebReady() {
@@ -41,7 +44,8 @@ public class MainActivity extends BridgeActivity {
         content.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
             @Override
             public boolean onPreDraw() {
-                if (!webReady && SystemClock.uptimeMillis() - start < SPLASH_MAX_MS) return false;
+                long shown = SystemClock.uptimeMillis() - start;
+                if ((!webReady || shown < SPLASH_MIN_MS) && shown < SPLASH_MAX_MS) return false;
                 content.getViewTreeObserver().removeOnPreDrawListener(this);
                 return true;
             }

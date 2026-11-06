@@ -57,6 +57,9 @@ dependencies {
     implementation project(':capacitor-android')
     // On-device Gemini Nano through AICore (DESIGN 3.6.1, S15). beta4: newest release older than two weeks.
     implementation "com.google.mlkit:genai-prompt:1.0.0-beta4"
+    // genai-prompt beta4 calls the static Job.cancel$default that first ships in coroutines 1.11.0, but its
+    // POM declares 1.7.3, so Gradle resolved 1.10.2 and the download crashed with NoSuchMethodError.
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.11.0"
     // "Buy the developer a coffee" one-time consumable through Google Play Billing (DESIGN 3.17, S16). 9.1.0: 2026-06-18.
     implementation "com.android.billingclient:billing:9.1.0"
     testImplementation "junit:junit:$junitVersion"

@@ -121,7 +121,6 @@ export async function generate(req: GenerateRequest, deps: GenerateDeps): Promis
       output: parseOutput(raw),
       inputRefs: req.refs,
       lang: req.lang,
-      keywords: req.keywords,
       copySources: [...excerpts.filter((e) => sent.has(excerptId(e))).map((e) => ({ id: excerptId(e), text: e.text })), ...(req.extraCopySources ?? [])],
       quotedBlocks: passageText(req.verses),
     });

@@ -19,8 +19,9 @@ export function lengthBounds(lang: Lang): { min: number; max: number; unit: 'cha
     : { min: generation.sermon_min_chars, max: generation.sermon_max_chars, unit: 'chars' };
 }
 
-export function checkLength(body: string, lang: Lang): Issue[] {
-  const b = lengthBounds(lang);
+/** `range` overrides the accepted range (on-device drafts accept a wider one). */
+export function checkLength(body: string, lang: Lang, range?: { min: number; max: number }): Issue[] {
+  const b = { ...lengthBounds(lang), ...range };
   const actual = countLength(body, lang);
   return actual < b.min || actual > b.max ? [{ kind: 'length', actual, ...b }] : [];
 }

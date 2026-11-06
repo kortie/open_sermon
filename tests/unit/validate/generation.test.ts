@@ -12,7 +12,7 @@ import {
   type Lang,
   type ValidateInput,
 } from '../../../src/core/validate';
-import { fixture, KEYWORDS_EN, KEYWORDS_KO, ref, reply, SOURCES, VERSES } from '../../fixtures/llm-responses';
+import { fixture, ref, reply, SOURCES, VERSES } from '../../fixtures/llm-responses';
 
 const INPUT = [ref('JHN 15:1-5')];
 function run(name: string, lang: Lang = 'ko', extra: Partial<ValidateInput> = {}) {
@@ -20,7 +20,6 @@ function run(name: string, lang: Lang = 'ko', extra: Partial<ValidateInput> = {}
     output: parseOutput(reply(name)),
     inputRefs: INPUT,
     lang,
-    keywords: lang === 'ko' ? KEYWORDS_KO : KEYWORDS_EN,
     copySources: [{ id: 'chunk-1', text: SOURCES.excerpt }],
     quotedBlocks: VERSES.map((v) => v.text),
     ...extra,
@@ -35,18 +34,19 @@ describe('fixtures', () => {
       expect(r.issues).toEqual([]);
       expect(r.humorIssues).toEqual([]);
       expect(r.ok).toBe(true);
-      expect(r.output?.humor).toHaveLength(2);
+      expect(r.output?.examples).toHaveLength(1);
+      expect(r.output?.humor).toHaveLength(1);
     }
   });
 
   it('not JSON → schema', () => {
-    const r = validateGeneration({ output: parseOutput('Sure! Here is your draft.'), inputRefs: INPUT, lang: 'ko', keywords: [], copySources: [], quotedBlocks: [] });
+    const r = validateGeneration({ output: parseOutput('Sure! Here is your draft.'), inputRefs: INPUT, lang: 'ko', copySources: [], quotedBlocks: [] });
     expect(r).toMatchObject({ ok: false, issues: [{ kind: 'schema' }] });
     expect(r.output).toBeUndefined();
   });
 
-  it('one example → count', () => {
-    expect(run('examples-one').issues).toContainEqual({ kind: 'count', field: 'examples' });
+  it('two examples → count (one is expected)', () => {
+    expect(run('examples-two').issues).toContainEqual({ kind: 'count', field: 'examples' });
   });
 
   it('verse_refs outside the passage, and quote markers outside it, fail', () => {
@@ -74,13 +74,14 @@ describe('fixtures', () => {
     expect(r.humorDropped).toBe(true);
     expect(r.humorIssues).toContainEqual({ kind: 'humor_topic', index: 0, topic: 'clergy_mockery' });
     expect(r.output?.humor).toEqual([]);
-    expect(r.output?.examples).toHaveLength(2);
+    expect(r.output?.examples).toHaveLength(1);
   });
 
-  it('a purpose without an input keyword drops the light remarks only', () => {
-    const r = run('humor-no-keyword');
+  it('a light remark without how to bring it in drops the light remark only', () => {
+    const r = run('humor-no-purpose');
     expect(r.ok).toBe(true);
-    expect(r.humorIssues).toEqual([{ kind: 'humor_purpose', index: 1 }]);
+    expect(r.humorIssues).toEqual([{ kind: 'humor_purpose', index: 0 }]);
+    expect(r.output?.humor).toEqual([]);
   });
 
   it('pastor imitation ("○○ 목사처럼") fails', () => {
@@ -127,7 +128,7 @@ describe('structure', () => {
 
   it('drops unknown fields and reports both counts', () => {
     const ok = fixture('ok-ko') as { examples: unknown[]; humor: unknown[] };
-    const r = checkStructure({ ...ok, extra: '<b>', examples: [], humor: ok.humor.slice(0, 1) });
+    const r = checkStructure({ ...ok, extra: '<b>', examples: [], humor: [...ok.humor, ...ok.humor] });
     expect(r.ok).toBe(false);
     if (r.ok) return;
     expect(r.issues).toEqual([
@@ -139,12 +140,17 @@ describe('structure', () => {
 
   it('an example without verse_refs fails', () => {
     const o = fixture('ok-ko') as { examples: { verse_refs: string[] }[] };
-    o.examples[1]!.verse_refs = [];
-    expect(validateGeneration({ output: o, inputRefs: INPUT, lang: 'ko', keywords: KEYWORDS_KO, copySources: [], quotedBlocks: [] }).issues).toEqual([{ kind: 'verse_missing', index: 1 }]);
+    o.examples[0]!.verse_refs = [];
+    expect(validateGeneration({ output: o, inputRefs: INPUT, lang: 'ko', copySources: [], quotedBlocks: [] }).issues).toEqual([{ kind: 'verse_missing', index: 0 }]);
   });
 });
 
 describe('parts', () => {
+  it('parseOutput drops a stray backslash but keeps real escapes; still undefined for broken JSON', () => {
+    expect(parseOutput('```json\n{"t":"그가 \\"좋다\\"\\ 말했다\\n끝 \\\\ \\u0041"}\n```')).toEqual({ t: '그가 "좋다" 말했다\n끝 \\ A' });
+    expect(parseOutput('{"t": "a" "b"}')).toBeUndefined();
+  });
+
   it('refWithin: comma blocks, whole chapters, other chapters, unparsable', () => {
     const comma = [ref('JHN 15:1-3,7')];
     expect(refWithin('JHN 15:7', comma)).toBe(true);

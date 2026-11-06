@@ -53,19 +53,19 @@
   "excerpt_label": "Excerpt {n}",
   "passage_intro": "Translation: {bible}. Each line is \"reference text\".",
   "no_requote": "Do not quote or copy, verse by verse, the text of any other translation the user imported into this app. Quote only the passage text given above.",
-  "keywords_intro": "Use at least one of these keywords in the purpose of each light remark.",
+  "keywords_intro": "Use these keywords to set the direction of the message draft and the everyday example. The light remark starts from the passage, not from the keywords.",
   "output_lines": [
     "Answer only in the JSON format below.",
     "- sermon: the message draft, with title and body. Write the body as introduction, explanation of the passage, 2–3 applications, and a closing prayer.",
     "- sermon.body must be {min}–{max} words. [[QUOTE ...]] markers do not count as words.",
-    "- examples: exactly 2 everyday examples. Put the supporting verses in each example's verse_refs.",
-    "- humor: exactly 2 light remarks. In purpose, say in one sentence how the remark supports the message of the passage.",
+    "- examples: exactly 1 everyday example. A first-person story of about 100 words, told as something the speaker went through (e.g. \"Last week I took a taxi and got talking with the driver, and I realized …\"). Say when, where, with whom and what happened, and what it taught, so it connects with the message of the passage. Put the supporting verses in verse_refs.",
+    "- humor: exactly 1 light remark. In text, write one light bit of humor that starts from the chosen passage (not from the keywords) and can be used in the message. In purpose, say in one or two sentences where in the message and how to bring it in.",
     "- In verse_refs and [[QUOTE ...]] use only references from [Data: Passage], written like \"JHN 15:5\" or \"JHN 15:1-3\"."
   ],
   "retry_intro": "The previous answer missed the rules below. Write the whole answer again so that it meets them.",
   "retry_reasons": {
     "schema": "The JSON format was not valid.",
-    "count": "examples and humor must each have exactly 2 items.",
+    "count": "examples and humor must each have exactly 1 item.",
     "length": "sermon.body was outside {min}–{max} words.",
     "verse_out_of_range": "A reference outside [Data: Passage] was used.",
     "real_person": "An expression imitating a real person was used.",

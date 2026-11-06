@@ -618,13 +618,16 @@
     "on_device_ai": {
       "type": "object",
       "additionalProperties": false,
-      "description": "On-device OS AI (S15): Android ML Kit GenAI Prompt API (Gemini Nano), iOS Foundation Models. Short results only; no endpoint, nothing leaves the device except the ML Kit diagnostics disclosed at diagnostics_disclosure_url.",
+      "description": "On-device OS AI (S15): Android ML Kit GenAI Prompt API (Gemini Nano), iOS Foundation Models. Reflection Draft (short prompt, draft only) and short results; no endpoint, nothing leaves the device except the ML Kit diagnostics disclosed at diagnostics_disclosure_url.",
       "required": [
         "kinds",
         "models",
         "max_output_tokens",
+        "draft_max_output_tokens",
+        "draft_length",
         "max_passage_chars",
         "timeout_seconds",
+        "status_poll_seconds",
         "diagnostics_disclosure_url"
       ],
       "properties": {
@@ -635,6 +638,7 @@
           "items": {
             "type": "string",
             "enum": [
+              "sermon",
               "example",
               "one_liner"
             ]
@@ -661,6 +665,52 @@
         "max_output_tokens": {
           "$ref": "#/definitions/posInt"
         },
+        "draft_max_output_tokens": {
+          "$ref": "#/definitions/posInt"
+        },
+        "draft_length": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Accepted Reflection Draft body length with on-device AI (ko: characters, en: words). Wider than generation.sermon_min/max_chars and i18n.english_length_words because the small model cannot count; the prompt still asks for the normal range.",
+          "required": [
+            "ko",
+            "en"
+          ],
+          "properties": {
+            "ko": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "min",
+                "max"
+              ],
+              "properties": {
+                "min": {
+                  "$ref": "#/definitions/posInt"
+                },
+                "max": {
+                  "$ref": "#/definitions/posInt"
+                }
+              }
+            },
+            "en": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "min",
+                "max"
+              ],
+              "properties": {
+                "min": {
+                  "$ref": "#/definitions/posInt"
+                },
+                "max": {
+                  "$ref": "#/definitions/posInt"
+                }
+              }
+            }
+          }
+        },
         "max_passage_chars": {
           "type": "object",
           "additionalProperties": false,
@@ -679,6 +729,10 @@
         },
         "timeout_seconds": {
           "$ref": "#/definitions/posInt"
+        },
+        "status_poll_seconds": {
+          "$ref": "#/definitions/posInt",
+          "description": "While the OS downloads the model, settings asks for the status this often so it shows when the model is ready."
         },
         "diagnostics_disclosure_url": {
           "type": "string",

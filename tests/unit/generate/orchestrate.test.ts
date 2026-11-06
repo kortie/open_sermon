@@ -75,7 +75,7 @@ describe('generate', () => {
 
   it('first reply fails, second passes: result, exactly 2 requests, 2 calls counted', async () => {
     const db = await fresh();
-    const f = scripted('examples-one', 'ok-ko');
+    const f = scripted('examples-two', 'ok-ko');
     const out = await generate(request, deps(f, db));
     expect(out).toMatchObject({ kind: 'result', calls: 2 });
     expect(f).toHaveBeenCalledTimes(2);
@@ -127,7 +127,7 @@ describe('generate', () => {
     expect(out).toMatchObject({ kind: 'result', humorDropped: true });
     if (out.kind === 'result') {
       expect(out.output.humor).toEqual([]);
-      expect(out.output.examples).toHaveLength(2);
+      expect(out.output.examples).toHaveLength(1);
     }
   });
 
@@ -175,7 +175,7 @@ describe('generate', () => {
 
     it('daily limit reached before the retry: fallback after 1 request', async () => {
       const db = await fresh();
-      const f = scripted('examples-one', 'ok-ko');
+      const f = scripted('examples-two', 'ok-ko');
       const out = await generate(request, deps(f, db, { limit: 1 }));
       expect(out).toMatchObject({ kind: 'fallback', reason: 'daily_limit', calls: 1 });
       expect(f).toHaveBeenCalledTimes(1);

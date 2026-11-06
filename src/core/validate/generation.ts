@@ -16,8 +16,6 @@ export interface ValidateInput {
   output: unknown;
   inputRefs: readonly Reference[];
   lang: Lang;
-  /** Input keywords (DESIGN 6.1); a light remark's purpose must name one. */
-  keywords: readonly string[];
   /** Reference excerpts and imported bible text (S11). */
   copySources: readonly CopySource[];
   /** Bundled bible text of the passage: never counted as copying. */
@@ -56,7 +54,7 @@ export function validateGeneration(i: ValidateInput): ValidateResult {
     ...checkForbidden(o),
     ...checkCopies(o, i.copySources, i.quotedBlocks, i.n),
   ];
-  const humorIssues = checkHumor(o.humor, i.keywords);
+  const humorIssues = checkHumor(o.humor);
   const humorDropped = humorIssues.length > 0;
   return { ok: issues.length === 0, issues, humorIssues, humorDropped, output: humorDropped ? { ...o, humor: [] } : o };
 }

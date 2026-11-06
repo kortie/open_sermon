@@ -3,7 +3,7 @@
 // (src/app/platform.ts); core never imports Capacitor. There is no key and no endpoint: the prompt
 // and the answer stay on the device. The model is downloaded by the OS only when the user taps
 // "download" (never automatically). Used only while no provider key is connected, and only for
-// the short kinds (config on_device_ai.kinds).
+// the kinds in config on_device_ai.kinds (Reflection Draft, everyday examples, light remarks).
 import { on_device_ai } from '../../../config/app.config.json';
 import { getAllSettings, setSettings } from '../store/settings';
 import { LlmError, type GenerateOptions, type LlmCause, type LlmClient } from './types';
@@ -25,7 +25,7 @@ export interface DeviceAiBridge {
   generate(req: { system: string; user: string; maxTokens: number }): Promise<string>;
 }
 
-export type DeviceKind = 'example' | 'one_liner';
+export type DeviceKind = 'sermon' | 'example' | 'one_liner';
 export const DEVICE_KINDS: readonly string[] = on_device_ai.kinds;
 export const DEVICE_PROVIDER = 'device';
 
@@ -51,6 +51,30 @@ export async function deviceAiStatus(b: DeviceAiBridge | null = bridge): Promise
   } catch {
     return { status: 'unavailable' };
   }
+}
+
+/**
+ * While the status is 'downloading', ask again every `intervalMs` and report each new status; stops
+ * by itself once the status is anything else. Returns a function that stops it early.
+ */
+export function watchDeviceAiDownload(
+  onStatus: (status: DeviceAiStatus) => void,
+  b: DeviceAiBridge | null = bridge,
+  intervalMs = on_device_ai.status_poll_seconds * 1000,
+): () => void {
+  let stopped = false;
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const tick = async () => {
+    const { status } = await deviceAiStatus(b);
+    if (stopped) return;
+    onStatus(status);
+    if (status === 'downloading') timer = setTimeout(() => void tick(), intervalMs);
+  };
+  timer = setTimeout(() => void tick(), intervalMs);
+  return () => {
+    stopped = true;
+    clearTimeout(timer);
+  };
 }
 
 /** The user turned on-device AI on in settings (default off). */
@@ -93,7 +117,7 @@ export function createDeviceClient(b: DeviceAiBridge, timeoutMs = on_device_ai.t
   return {
     async generate(system: string, user: string, opts: GenerateOptions = {}): Promise<string> {
       if (opts.signal?.aborted) throw new LlmError('unknown');
-      const maxTokens = Math.min(opts.maxTokens ?? on_device_ai.max_output_tokens, on_device_ai.max_output_tokens);
+      const maxTokens = Math.min(opts.maxTokens ?? on_device_ai.max_output_tokens, on_device_ai.draft_max_output_tokens);
       let timer: ReturnType<typeof setTimeout> | undefined;
       let onAbort: (() => void) | undefined;
       const stop = new Promise<never>((_, reject) => {

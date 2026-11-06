@@ -16,8 +16,8 @@ interface Props {
   bibleId: string;
   lang: Lang;
   fromCache?: boolean;
-  /** Short result (on-device AI, S15): show only this section. */
-  only?: 'examples' | 'humor';
+  /** On-device AI (S15): show only this section. */
+  only?: 'sermon' | 'examples' | 'humor';
 }
 
 function RefLink({ refText, lang }: { refText: string; lang: Lang }) {
@@ -98,7 +98,7 @@ export function ResultPanel({ output, humorDropped, verses, bibleId, lang, fromC
         </p>
       )}
 
-      {!only && (
+      {(!only || only === 'sermon') && (
         <section className="card" aria-labelledby="result-sermon">
           <h3 id="result-sermon" className="card__title">
             {t('result.sermon')}
@@ -111,7 +111,7 @@ export function ResultPanel({ output, humorDropped, verses, bibleId, lang, fromC
         </section>
       )}
 
-      {only !== 'humor' && (
+      {(!only || only === 'examples') && (
         <section className="card" aria-labelledby="result-examples">
           <h3 id="result-examples" className="card__title">
             {t('result.examples')}
@@ -127,7 +127,7 @@ export function ResultPanel({ output, humorDropped, verses, bibleId, lang, fromC
         </section>
       )}
 
-      {only !== 'examples' && (
+      {(!only || only === 'humor') && (
         <section className="card" aria-labelledby="result-humor">
           <h3 id="result-humor" className="card__title">
             {t('result.humor')}

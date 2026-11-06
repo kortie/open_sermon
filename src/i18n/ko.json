@@ -133,16 +133,18 @@
     "bible_reset_notice": "고른 역본이 지워져 기본 역본으로 돌아갔습니다.",
     "device_ai": {
       "title": "휴대폰 안 AI",
-      "hint": "열쇠 없이 이 휴대폰에 들어 있는 AI로 삶에 닿는 예시와 가벼운 한마디를 만들어요. 고른 본문과 키워드는 휴대폰 밖으로 나가지 않아요.",
-      "scope_note": "말씀 나눔 초안은 길어서 휴대폰 안 AI로는 만들 수 없어요. 초안은 Gemini나 Claude를 연결해 주세요.",
+      "hint": "열쇠 없이 이 휴대폰에 들어 있는 AI로 말씀 나눔 초안, 삶에 닿는 예시, 가벼운 한마디를 만들어요. 고른 본문, 키워드, 페르소나는 휴대폰 밖으로 나가지 않아요.",
+      "scope_note": "휴대폰 안 AI는 작은 모델이라 Gemini나 Claude보다 글이 단순할 수 있어요. 내 설교 원고와 스타일 프로필은 쓰지 않아요.",
       "connected_note": "AI가 연결되어 있으면 연결된 AI를 먼저 써요.",
       "status_checking": "상태를 확인하고 있어요.",
       "status_available": "준비됐어요. 바로 쓸 수 있어요.",
-      "status_downloadable": "AI 모델을 먼저 내려받아야 해요. 와이파이에 연결한 뒤 내려받기를 눌러 주세요.",
-      "status_downloading": "AI 모델을 내려받고 있어요. 다 받으면 바로 쓸 수 있어요.",
+      "status_downloadable": "Android에 들어 있는 AI를 쓰려면 AI 모델을 처음 한 번 내려받아야 해요. 와이파이에 연결한 뒤 내려받기를 눌러 주세요. 와이파이 상태에 따라 수십 분이 걸릴 수 있어요.",
+      "status_downloading": "Android에 들어 있는 AI를 쓰려고 AI 모델을 처음 한 번 내려받고 있어요. 와이파이에 연결돼 있을 때만 받고, 수십 분이 걸릴 수 있어요. 앱을 닫아도 휴대폰이 이어서 받아요. 다 받으면 '상태 다시 보기'를 눌러 주세요.",
       "status_unavailable": "이 휴대폰에서는 휴대폰 안 AI를 쓸 수 없어요.",
-      "model_note": "AI 모델: 휴대폰이 글을 만들 때 쓰는 프로그램이에요. 휴대폰 회사가 제공하고, 한 번 받으면 휴대폰에 남아요.",
+      "model_note": "AI 모델: Android의 AI가 글을 만들 때 쓰는 프로그램이에요. Google이 제공하고, 한 번 받으면 휴대폰에 남아요.",
       "download": "내려받기",
+      "downloading_label": "AI 모델 내려받는 중",
+      "download_follow": "받는 상황 보기",
       "download_progress": "내려받는 중이에요 ({mb}MB)",
       "download_failed": "내려받지 못했어요. 와이파이와 저장 공간을 확인한 뒤 다시 눌러 주세요.",
       "check_again": "상태 다시 보기",
@@ -663,7 +665,8 @@
     "no_connection_outline": "말씀 구성표로 쓰기",
     "device_notice_body": "고른 본문과 키워드로 이 휴대폰 안에서 만들어요. 휴대폰 밖으로 보내지 않아요.",
     "device_notice_wait": "휴대폰에 따라 시간이 조금 걸릴 수 있어요. 앱을 화면에 켜 둔 채 기다려 주세요.",
-    "no_connection_device": "휴대폰 안 AI는 열쇠 없이 짧은 예시와 가벼운 한마디만 만들 수 있어요. 설정 → 휴대폰 안 AI에서 켤 수 있어요."
+    "sending_device": "이 휴대폰 안에서 만들고 있어요. 초안은 1~2분 걸릴 수 있어요. 앱을 화면에 켜 둔 채 기다려 주세요.",
+    "no_connection_device": "열쇠 없이 휴대폰 안 AI로도 초안을 만들 수 있어요. 설정 → 휴대폰 안 AI에서 켜 주세요."
   },
   "result": {
     "ai_notice": "AI가 만든 초안입니다. 고쳐 쓰시면 더 좋아요.",

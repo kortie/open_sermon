@@ -1,9 +1,9 @@
-// Structure check (DESIGN 6.2, 7.1): field types, then examples 2 and humor 2. Unknown fields are
+// Structure check (DESIGN 6.2, 7.1): field types, then 1 everyday example and 1 light remark (user decision 2026-11-06). Unknown fields are
 // dropped so nothing unexpected reaches the screen.
 import type { GenerationOutput, Issue } from './types';
 
-export const EXPECTED_EXAMPLES = 2;
-export const EXPECTED_HUMOR = 2;
+export const EXPECTED_EXAMPLES = 1;
+export const EXPECTED_HUMOR = 1;
 
 const isObj = (v: unknown): v is Record<string, unknown> => typeof v === 'object' && v !== null && !Array.isArray(v);
 const isStr = (v: unknown): v is string => typeof v === 'string';

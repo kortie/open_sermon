@@ -3,8 +3,8 @@
 // notice offering "connect AI" or "use the outline"; nothing is sent. Connected → the transfer notice (unless turned
 // off in settings) → one request (at most one retry) → validated result or the independent result.
 // The request can be cancelled at any time; leaving the screen cancels it too.
-// No key connected, a short kind and on-device AI turned on and ready (S15): the same screen, but
-// the answer is made on the phone (core/generate/device.ts) and only that kind is shown.
+// No key connected and on-device AI turned on and ready (S15): the same screen, but the answer is
+// made on the phone (core/generate/device.ts), one section at a time, and only that section is shown.
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
 import { parseReference, type Reference, type Verse } from '../../core/bible';
 import { isImportedBibleId } from '../../core/bible-import';
@@ -62,6 +62,8 @@ export function Generate({ refParam, kindParam }: { refParam: string; kindParam?
       const conn = await getConnection();
       if (!conn) {
         if (!DEVICE_KINDS.includes(kind) || !(await deviceClient())) return null;
+        // The persona stays on the phone; the draft follows it.
+        const persona = kind === 'sermon' ? await getActivePersona().catch(() => null) : null;
         const device: Context = {
           mode: 'device',
           conn: {
@@ -69,7 +71,7 @@ export function Generate({ refParam, kindParam }: { refParam: string; kindParam?
             model: deviceModel(),
             key_last4: '',
           },
-          persona: null,
+          persona,
           consent: false,
           remaining: 0,
           style: null,
@@ -174,7 +176,7 @@ function GenerateScreen({ refText, reference, kind, ctx, bibleId, verses, import
     try {
       if (ctx.mode === 'device') {
         const client = await deviceClient();
-        if (!client || kind === 'sermon') return navigate('library', { ref: refText, kind: libraryKind(kind) }, { replace: true });
+        if (!client) return navigate('library', { ref: refText, kind: libraryKind(kind) }, { replace: true });
         const outcome = await generateOnDevice(
           {
             kind,
@@ -183,7 +185,7 @@ function GenerateScreen({ refText, reference, kind, ctx, bibleId, verses, import
             refs: [reference],
             verses,
             keywords,
-            persona: null,
+            persona: ctx.persona,
             excerpts: [],
             transferConsent: false,
             extraCopySources: importedVerses.map((v) => ({
@@ -253,7 +255,7 @@ function GenerateScreen({ refText, reference, kind, ctx, bibleId, verses, import
     return (
       <section className="generate" data-testid="generate-sending">
         <p role="status" aria-live="polite" className="generate__status">
-          {t('generate.sending')}
+          {t(ctx.mode === 'device' ? 'generate.sending_device' : 'generate.sending')}
         </p>
         <button type="button" className="button button--secondary" onClick={() => controller.current?.abort()} data-testid="generate-cancel">
           {t('generate.cancel')}
@@ -274,7 +276,7 @@ function GenerateScreen({ refText, reference, kind, ctx, bibleId, verses, import
             bibleId={bibleId}
             lang={lang}
             fromCache={o.fromCache}
-            only={ctx.mode === 'device' ? (kind === 'example' ? 'examples' : 'humor') : undefined}
+            only={ctx.mode === 'device' ? (kind === 'sermon' ? 'sermon' : kind === 'example' ? 'examples' : 'humor') : undefined}
           />
         ) : (
           <FallbackView reason={o.reason} independent={o.independent} refText={refText} kind={libraryKind(kind)} provider={ctx.conn.provider} />

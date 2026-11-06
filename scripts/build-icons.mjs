@@ -11,6 +11,11 @@ const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const BRAND = { background: '#1F3A5F', studio: 'JuanStudio', studioColor: '#E8DCC2' };
 const mark = readFileSync(join(root, 'assets/brand/mark.svg'), 'utf8').replace(/<!--[\s\S]*?-->/g, '');
 const markUri = `data:image/svg+xml;base64,${Buffer.from(mark).toString('base64')}`;
+// Studio name in a light, wide-spaced sans. Ubuntu Sans (Ubuntu Font Licence 1.0, fonts-ubuntu package) is
+// embedded only while rendering; the PNGs carry the shapes, not the font.
+const STUDIO_FONT_FILE = '/usr/share/fonts/truetype/ubuntu/UbuntuSans[wdth,wght].ttf';
+const studioFontFace = `@font-face{font-family:Studio;src:url(data:font/ttf;base64,${readFileSync(STUDIO_FONT_FILE).toString('base64')}) format('truetype');font-weight:100 800}`;
+const studioFont = (px) => `font-family:Studio;font-weight:300;font-size:${px}px;line-height:1;letter-spacing:0.22em`;
 
 /** One image: w×h px, optional background shape, mark at `scale` of the short side, optional studio line. */
 function html({ w, h, bg = null, shape = 'square', scale = 1, studio = false }) {
@@ -18,17 +23,17 @@ function html({ w, h, bg = null, shape = 'square', scale = 1, studio = false }) 
   const markPx = Math.round(side * scale);
   const radius = shape === 'circle' ? '50%' : shape === 'rounded' ? `${Math.round(side * 0.18)}px` : '0';
   const studioLine = studio
-    ? `<div style="position:absolute;left:0;right:0;bottom:${Math.round(h * 0.08)}px;text-align:center;color:${BRAND.studioColor};font:600 ${Math.round(side * 0.045)}px/1 sans-serif;letter-spacing:0.08em">${BRAND.studio}</div>`
+    ? `<div style="position:absolute;left:0;right:0;bottom:${Math.round(h * 0.08)}px;text-align:center;color:${BRAND.studioColor};${studioFont(Math.round(side * 0.03))}">${BRAND.studio}</div>`
     : '';
-  return `<!doctype html><html><body style="margin:0;width:${w}px;height:${h}px;background:transparent">
+  return `<!doctype html><html><head><style>${studioFontFace}</style></head><body style="margin:0;width:${w}px;height:${h}px;background:transparent">
 <div style="position:relative;width:${w}px;height:${h}px;overflow:hidden;${bg ? `background:${bg};border-radius:${radius};` : ''}">
 <img src="${markUri}" style="position:absolute;width:${markPx}px;height:${markPx}px;left:${(w - markPx) / 2}px;top:${(h - markPx) / 2}px">${studioLine}</div></body></html>`;
 }
 
 /** Branding image for the Android 12+ system splash: the studio name only. */
 function brandingHtml(w, h) {
-  return `<!doctype html><html><body style="margin:0;width:${w}px;height:${h}px;background:transparent">
-<div style="width:${w}px;height:${h}px;display:flex;align-items:center;justify-content:center;color:${BRAND.studioColor};font:600 ${Math.round(h * 0.38)}px/1 sans-serif;letter-spacing:0.08em">${BRAND.studio}</div></body></html>`;
+  return `<!doctype html><html><head><style>${studioFontFace}</style></head><body style="margin:0;width:${w}px;height:${h}px;background:transparent">
+<div style="width:${w}px;height:${h}px;display:flex;align-items:center;justify-content:center;color:${BRAND.studioColor};${studioFont(Math.round(h * 0.22))}">${BRAND.studio}</div></body></html>`;
 }
 
 const jobs = [];
@@ -67,6 +72,7 @@ try {
   for (const j of jobs) {
     const page = await browser.newPage({ viewport: { width: j.w, height: j.h }, deviceScaleFactor: 1 });
     await page.setContent(j.branding ? brandingHtml(j.w, j.h) : html(j), { waitUntil: 'load' });
+    await page.evaluate("document.fonts.ready");
     await page.screenshot({ path: join(root, j.out), omitBackground: !j.opaque, clip: { x: 0, y: 0, width: j.w, height: j.h } });
     await page.close();
   }

@@ -44,8 +44,8 @@ test('selection → everyday examples → transfer notice → result with AI not
   await expect(page.getByTestId('result-notice-top')).toHaveText(ko.result.ai_notice);
   await expect(page.getByTestId('result-notice-bottom')).toHaveText(ko.result.ai_notice);
   await expect(page.getByTestId('result-title')).toHaveText('포도나무에 붙어 있는 삶');
-  await expect(page.getByTestId('result-example')).toHaveCount(2);
-  await expect(page.getByTestId('result-humor')).toHaveCount(2);
+  await expect(page.getByTestId('result-example')).toHaveCount(1);
+  await expect(page.getByTestId('result-humor')).toHaveCount(1);
   // The quote is the bundled 개역한글 text, not model text.
   const quote = page.getByTestId('result-quote').first();
   await expect(quote).toContainText(ko.result.quote.replace('{bible}', ko.bible.krv));
@@ -54,9 +54,9 @@ test('selection → everyday examples → transfer notice → result with AI not
   expect(await smallTargets(page)).toEqual([]);
   await visibleTextHasNoInternalTerms(page);
 
-  await page.getByTestId('result-example').nth(1).getByTestId('result-ref').click();
+  await page.getByTestId('result-example').first().getByTestId('result-ref').click();
   await expect(page.getByTestId('chapter-title')).toHaveText('요한복음 15장');
-  await expect(page).toHaveURL(/#\/read\?ref=JHN\+15%3A5/);
+  await expect(page).toHaveURL(/#\/read\?ref=JHN\+15%3A4/);
 });
 
 test('XSS reply: <script> and <img onerror> are shown as text and never run', async ({ page, context }) => {

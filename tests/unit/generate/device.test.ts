@@ -1,15 +1,16 @@
-// S15: short results on the device — short prompt (no persona, profile or excerpts), no daily slot,
-// no cache, passage cap, same validation with one retry, fallback on failure.
+// S15: one section at a time on the device — short prompt (no profile or excerpts; persona for the
+// draft only), no daily slot, no cache, passage cap, same validation with one retry, fallback on failure.
 import 'fake-indexeddb/auto';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { buildDevicePrompt, generateOnDevice } from '../../../src/core/generate/device';
+import { buildDevicePrompt, deviceMaxTokens, generateOnDevice } from '../../../src/core/generate/device';
+import { buildPersonaBlock, defaultPersona } from '../../../src/core/persona';
 import type { GenerateRequest } from '../../../src/core/generate/orchestrate';
 import { createDeviceClient, type DeviceAiBridge } from '../../../src/core/llm/device';
 import { getLlmCalls } from '../../../src/core/store/local-stats';
 import { openDb } from '../../../src/core/store/db';
 import { fixture, KEYWORDS_KO, ref, SOURCES, VERSES } from '../../fixtures/llm-responses';
 
-const ok = fixture('ok-ko') as { examples: unknown[]; humor: unknown[] };
+const ok = fixture('ok-ko') as { sermon: { title: string; body: string; verse_refs: string[] }; examples: unknown[]; humor: unknown[] };
 let n = 0;
 const opened: IDBDatabase[] = [];
 async function fresh() {
@@ -19,7 +20,7 @@ async function fresh() {
 }
 afterEach(() => opened.splice(0).forEach((db) => db.close()));
 
-const request = (kind: 'example' | 'one_liner', over: Partial<GenerateRequest> = {}) => ({
+const request = (kind: 'sermon' | 'example' | 'one_liner', over: Partial<GenerateRequest> = {}) => ({
   kind,
   lang: 'ko' as const,
   bibleId: 'krv',
@@ -59,6 +60,36 @@ describe('buildDevicePrompt', () => {
     expect(en.user).toContain('[Rewrite]');
   });
 
+  it('draft: persona block, length range and the draft-only format; no persona for the short kinds', () => {
+    const persona = defaultPersona('p', 'MY-LABEL');
+    const p = buildDevicePrompt({ lang: 'ko', bibleId: 'krv', verses: VERSES, keywords: ['열매'], kind: 'sermon', persona });
+    expect(p.user.startsWith(`[설교자]\n${buildPersonaBlock(persona, 'ko')}`)).toBe(true);
+    expect(p.user).not.toContain('MY-LABEL');
+    expect(p.user).toContain('800~1200자');
+    expect(p.user).toContain('{"sermon":{"title":"","body":"","verse_refs":[]}}');
+    expect(p.user).not.toContain('"examples"');
+    const fallback = buildDevicePrompt({ lang: 'en', bibleId: 'kjv', verses: VERSES, keywords: [], kind: 'sermon' });
+    expect(fallback.user).toContain(buildPersonaBlock(defaultPersona('default', ''), 'en'));
+    expect(fallback.user).toContain('550 to 750 words');
+    expect(buildDevicePrompt({ lang: 'ko', bibleId: 'krv', verses: VERSES, keywords: [], kind: 'example', persona }).user).not.toContain('[설교자]');
+    expect([deviceMaxTokens('sermon'), deviceMaxTokens('example'), deviceMaxTokens('one_liner')]).toEqual([2048, 1024, 1024]);
+  });
+
+  it('the example reference is the passage\'s first verse; the light remark gets no keywords', () => {
+    const p = buildDevicePrompt({ lang: 'ko', bibleId: 'krv', verses: VERSES, keywords: ['열매'], kind: 'sermon' });
+    expect(`${p.system}\n${p.user}`).not.toContain('{ref}');
+    // The passage itself ends at JHN 15:5, so check the fixed example is gone from the instructions only.
+    expect(p.system).toContain('[[QUOTE JHN 15:1]]');
+    expect(p.system).not.toContain('JHN 15:5');
+    expect(p.user).toContain('[[QUOTE JHN 15:1]]');
+    const remark = buildDevicePrompt({ lang: 'ko', bibleId: 'krv', verses: VERSES, keywords: ['열매'], kind: 'one_liner' });
+    expect(remark.user).not.toContain('[핵심어]');
+    expect(remark.user).toContain('{"humor":[{"text":"","purpose":""}]}');
+    const example = buildDevicePrompt({ lang: 'en', bibleId: 'kjv', verses: VERSES, keywords: ['vine'], kind: 'example' });
+    expect(example.user).toContain('[Keywords]\nvine');
+    expect(example.user).toContain('{"examples":[{"text":"","verse_refs":[]}]}');
+  });
+
   it('refuses an excluded bible, no verses, and a passage over the cap', () => {
     expect(() => buildDevicePrompt({ lang: 'ko', bibleId: 'niv', verses: VERSES, keywords: [], kind: 'example' })).toThrow(/excluded_bible/);
     expect(() => buildDevicePrompt({ lang: 'ko', bibleId: 'krv', verses: [], keywords: [], kind: 'example' })).toThrow(/no_verses/);
@@ -73,11 +104,33 @@ describe('generateOnDevice', () => {
     const { gen, client } = scripted(JSON.stringify({ examples: ok.examples }));
     const out = await generateOnDevice(request('example'), { client, model: 'gemini-nano', db });
     expect(out).toMatchObject({ kind: 'result', fromCache: false, calls: 1, meta: { provider: 'device', model: 'gemini-nano' } });
-    if (out.kind === 'result') expect(out.output.examples).toHaveLength(2);
+    if (out.kind === 'result') expect(out.output.examples).toHaveLength(1);
     const sent = gen.mock.calls[0]![0];
     expect(sent.user).not.toContain(SOURCES.excerpt);
     expect(sent.user).not.toContain('STYLE-PROFILE-TEXT');
     expect(await getLlmCalls(new Date(), db)).toBe(0);
+  });
+
+  it('draft: valid reply → draft only, asked with the draft token budget; too short twice → independent result', async () => {
+    const db = await fresh();
+    const { gen, client } = scripted(JSON.stringify({ sermon: ok.sermon }));
+    const out = await generateOnDevice(request('sermon'), { client, model: 'gemini-nano', db });
+    expect(out).toMatchObject({ kind: 'result', calls: 1, meta: { provider: 'device' } });
+    if (out.kind === 'result') {
+      expect(out.output.sermon).toEqual(ok.sermon);
+      expect(out.output.examples).toEqual([]);
+    }
+    expect(gen.mock.calls[0]![0].maxTokens).toBe(2048);
+    expect(gen.mock.calls[0]![0].user).not.toContain(SOURCES.excerpt);
+    expect(gen.mock.calls[0]![0].user).not.toContain('STYLE-PROFILE-TEXT');
+    expect(await getLlmCalls(new Date(), db)).toBe(0);
+
+    const short = JSON.stringify({ sermon: { ...ok.sermon, body: '짧은 초안입니다.' } });
+    const bad = scripted(short, short);
+    const failed = await generateOnDevice(request('sermon'), { client: bad.client, model: 'm', db });
+    expect(failed).toMatchObject({ kind: 'fallback', reason: 'validation', calls: 2 });
+    if (failed.kind === 'fallback') expect(failed.issues).toContainEqual(expect.objectContaining({ kind: 'length' }));
+    expect(bad.gen.mock.calls[1]![0].user).toContain('[다시 쓰기]');
   });
 
   it('bad first reply → one retry with the rewrite note → result', async () => {
@@ -88,6 +141,16 @@ describe('generateOnDevice', () => {
     expect(gen.mock.calls[1]![0].user).toContain('[다시 쓰기]');
   });
 
+  it('a draft that is too long → the retry says how long it was', async () => {
+    const db = await fresh();
+    const long = JSON.stringify({ sermon: { ...ok.sermon, body: '가'.repeat(1600) } });
+    const { gen, client } = scripted(long, JSON.stringify({ sermon: ok.sermon }));
+    const out = await generateOnDevice(request('sermon'), { client, model: 'm', db });
+    expect(out).toMatchObject({ kind: 'result', calls: 2 });
+    expect(gen.mock.calls[1]![0].user).toContain('1600자로 너무 길었습니다');
+    expect(gen.mock.calls[1]![0].user).toContain('1200자 안으로');
+  });
+
   it('two bad replies → independent result (validation)', async () => {
     const db = await fresh();
     const { client } = scripted('x', 'y');
@@ -96,7 +159,7 @@ describe('generateOnDevice', () => {
     if (out.kind === 'fallback') expect(out.independent.outline.ref).toBe('JHN 15:1-5');
   });
 
-  it('native failure → its cause; too long → device_too_long without a call; draft kind refused', async () => {
+  it('native failure → its cause; too long → device_too_long without a call; unknown kind refused', async () => {
     const db = await fresh();
     const busy = scripted(Object.assign(new Error('on-device: busy'), { code: 'busy' }));
     expect(await generateOnDevice(request('example'), { client: busy.client, model: 'm', db })).toMatchObject({ kind: 'fallback', reason: 'device_busy', calls: 1 });
@@ -106,8 +169,8 @@ describe('generateOnDevice', () => {
     expect(await generateOnDevice(request('example', { verses }), { client: long.client, model: 'm', db })).toMatchObject({ kind: 'fallback', reason: 'device_too_long', calls: 0 });
     expect(long.gen).not.toHaveBeenCalled();
 
-    const draft = scripted();
-    expect(await generateOnDevice({ ...request('example'), kind: 'sermon' as never }, { client: draft.client, model: 'm', db })).toMatchObject({ kind: 'fallback', reason: 'unknown', calls: 0 });
+    const other = scripted();
+    expect(await generateOnDevice({ ...request('example'), kind: 'outline' as never }, { client: other.client, model: 'm', db })).toMatchObject({ kind: 'fallback', reason: 'unknown', calls: 0 });
     const niv = scripted();
     expect(await generateOnDevice(request('example', { bibleId: 'niv' }), { client: niv.client, model: 'm', db })).toMatchObject({ kind: 'fallback', reason: 'unknown', calls: 0 });
   });
