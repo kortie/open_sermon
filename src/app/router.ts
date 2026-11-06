@@ -1,10 +1,10 @@
 // Minimal hash router: works on static hosting and keeps the Android back button useful.
 // Routes: #/ (home), #/read?ref=…, #/search?q=…, #/sermons, #/settings[?section=backup], #/wizard,
 // #/retrieve?ref=…, #/outline[?ref=…|?id=…], #/library[?ref=…&kind=…], #/persona,
-// #/generate?ref=…&kind=example|one_liner, #/bible-import, #/bible-guide (S11)
+// #/generate?ref=…&kind=example|one_liner, #/bible-import, #/bible-guide (S11), #/about (S16)
 import { useSyncExternalStore } from 'react';
 
-export type RouteName = 'home' | 'read' | 'search' | 'sermons' | 'settings' | 'wizard' | 'retrieve' | 'outline' | 'library' | 'persona' | 'generate' | 'bible-import' | 'bible-guide';
+export type RouteName = 'home' | 'read' | 'search' | 'sermons' | 'settings' | 'wizard' | 'retrieve' | 'outline' | 'library' | 'persona' | 'generate' | 'bible-import' | 'bible-guide' | 'about';
 
 export interface Route {
   name: RouteName;
@@ -13,7 +13,7 @@ export interface Route {
   key: string;
 }
 
-const NAMES: readonly RouteName[] = ['home', 'read', 'search', 'sermons', 'settings', 'wizard', 'retrieve', 'outline', 'library', 'persona', 'generate', 'bible-import', 'bible-guide'];
+const NAMES: readonly RouteName[] = ['home', 'read', 'search', 'sermons', 'settings', 'wizard', 'retrieve', 'outline', 'library', 'persona', 'generate', 'bible-import', 'bible-guide', 'about'];
 
 export function parseHash(hash: string): Route {
   const raw = hash.replace(/^#\/?/, '');

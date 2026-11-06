@@ -186,7 +186,10 @@ test('home shows the outline and library entries; no internal terms on any S05 s
     await page.goto('/#/');
     await page.goto('/#/');
     const home = page.getByTestId('home');
-    if (await page.getByTestId('wizard-skip').isVisible().catch(() => false)) await page.getByTestId('wizard-skip').click();
+    const skip = page.getByTestId('wizard-skip');
+    // The splash shows first (S16), so wait until either the wizard or home is on screen.
+    await expect(home.or(skip)).toBeVisible({ timeout: 20_000 });
+    if (await skip.isVisible()) await skip.click();
     await expect(home).toBeVisible({ timeout: 20_000 });
     await expect(page.getByTestId('home-outlines')).toBeVisible();
     await expect(page.getByTestId('home-library')).toBeVisible();

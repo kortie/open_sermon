@@ -8,10 +8,14 @@ import './app/app.css';
 
 setDeviceAiBridge(nativeDeviceAi());
 
+/** The splash in index.html stays at least this long so it reads as a screen, not a flicker (DESIGN 3.17). */
+const SPLASH_MIN_MS = 600;
+const splashShown = new Promise<void>((resolve) => setTimeout(resolve, SPLASH_MIN_MS));
+
 const root = document.getElementById('root');
 if (root) {
   // Settings come from IndexedDB in a few ms; waiting avoids a flash of the wrong language or size.
-  void loadPreferences().then(() => {
+  void Promise.all([loadPreferences(), splashShown]).then(() => {
     createRoot(root).render(
       <StrictMode>
         <App />

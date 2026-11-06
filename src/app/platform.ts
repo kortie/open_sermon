@@ -98,3 +98,48 @@ export function nativeDeviceAi(): DeviceAiBridge | null {
   if (platform !== 'android' && platform !== 'ios') return null;
   return deviceAiBridgeFor(registerPlugin<OnDeviceAiPlugin>('OnDeviceAi'), platform);
 }
+
+export type CoffeeResult = 'thanks' | 'pending' | 'cancelled';
+export type CoffeeFailure = 'network' | 'unavailable' | 'busy' | 'unknown';
+
+/** Native Coffee plugin (android/app/src/main/java/.../CoffeePlugin.java, Google Play Billing). */
+export interface CoffeePlugin {
+  product(o: { productId: string }): Promise<{ available: boolean; price?: string }>;
+  buy(o: { productId: string }): Promise<{ result: CoffeeResult }>;
+}
+
+export interface CoffeeBridge {
+  product(): Promise<{ available: boolean; price?: string }>;
+  buy(): Promise<CoffeeResult>;
+}
+
+const COFFEE_FAILURES: readonly string[] = ['network', 'unavailable', 'busy', 'unknown'];
+
+/** Fixed failure code of a plugin rejection (anything else is 'unknown'). */
+export function coffeeFailure(err: unknown): CoffeeFailure {
+  const code = typeof err === 'object' && err !== null && 'code' in err ? (err as { code: unknown }).code : undefined;
+  return typeof code === 'string' && COFFEE_FAILURES.includes(code) ? (code as CoffeeFailure) : 'unknown';
+}
+
+export function coffeeBridgeFor(plugin: CoffeePlugin, productId: string): CoffeeBridge {
+  return {
+    product: async () => {
+      const r = await plugin.product({ productId });
+      return { available: r.available === true, price: typeof r.price === 'string' ? r.price : undefined };
+    },
+    buy: async () => {
+      const { result } = await plugin.buy({ productId });
+      return result === 'thanks' || result === 'pending' ? result : 'cancelled';
+    },
+  };
+}
+
+/** Coffee purchase in the app on a configured platform with the plugin; null elsewhere (DESIGN 3.17). */
+export function nativeCoffee(cfg: { product_id: string; platforms: readonly string[] }): CoffeeBridge | null {
+  if (!isNativeApp() || !Capacitor.isPluginAvailable('Coffee')) return null;
+  if (!cfg.platforms.includes(Capacitor.getPlatform())) return null;
+  return coffeeBridgeFor(registerPlugin<CoffeePlugin>('Coffee'), cfg.product_id);
+}
+
+/** App version shown on the About screen (package.json, injected at build time). */
+export const APP_VERSION: string = __APP_VERSION__;

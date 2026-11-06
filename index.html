@@ -4,14 +4,20 @@
     <meta charset="UTF-8" />
     <!-- CSP meta is injected at build time by vite.config.ts (cspPlugin). -->
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#6b4f2a" />
+    <meta name="theme-color" content="#1f3a5f" />
     <link rel="manifest" href="/manifest.webmanifest" />
     <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png" />
     <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
     <title>말씀 묵상</title>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <!-- Splash (DESIGN 3.17, S16): shown until the app renders; same artwork as the app icon. -->
+      <div class="splash" aria-hidden="true">
+        <img class="splash__mark" src="/icons/splash-mark.png" alt="" width="128" height="128" />
+        <p class="splash__studio">JuanStudio</p>
+      </div>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

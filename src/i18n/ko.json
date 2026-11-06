@@ -61,7 +61,8 @@
     "home": "홈",
     "read": "성경 읽기",
     "settings": "설정",
-    "sermons": "내 설교"
+    "sermons": "내 설교",
+    "about": "만든이"
   },
   "language": {
     "ko": "한국어",
@@ -819,5 +820,36 @@
   "bible_short": {
     "krv": "개역한글",
     "kjv": "KJV"
+  },
+  "about": {
+    "title": "만든이",
+    "version": "버전 {version}",
+    "made_by": "만든 곳: {studio}",
+    "copyright": "© {year} {studio}",
+    "contact_title": "문의",
+    "contact_send": "메일 보내기",
+    "contact_none": "문의 메일 주소를 준비하고 있어요.",
+    "license_title": "라이선스",
+    "license_body": "이 앱은 {license} 라이선스를 따릅니다.",
+    "bible_text": "성경 본문: 개역한글, KJV(퍼블릭 도메인). crizin/bible-db에서 가져왔습니다.",
+    "show_app": "앱 라이선스 전문 보기",
+    "hide_app": "앱 라이선스 닫기",
+    "show_third_party": "오픈소스 고지 보기",
+    "hide_third_party": "오픈소스 고지 닫기",
+    "coffee": {
+      "title": "커피 한 잔 사 주기",
+      "body": "앱이 도움이 되셨다면 만든이에게 커피 한 잔을 선물해 주세요.",
+      "note": "Google Play 결제로 처리됩니다. 선물해도 앱 기능은 그대로이고, 몇 번이든 다시 할 수 있어요.",
+      "buy": "커피 사 주기",
+      "buy_price": "커피 사 주기 ({price})",
+      "thanks": "고맙습니다! 커피 잘 마실게요.",
+      "pending": "결제가 아직 처리 중이에요. 끝나면 Google Play가 알려 드려요.",
+      "error": {
+        "network": "Google Play에 연결하지 못했어요. 인터넷 연결을 확인한 뒤 다시 눌러 주세요.",
+        "unavailable": "지금은 이 휴대폰에서 결제할 수 없어요.",
+        "busy": "결제 화면이 이미 열려 있어요.",
+        "unknown": "결제하지 못했어요. 잠시 뒤 다시 해 보세요."
+      }
+    }
   }
 }

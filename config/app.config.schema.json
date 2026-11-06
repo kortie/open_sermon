@@ -16,7 +16,9 @@
     "bible_import",
     "wizard",
     "backup",
-    "on_device_ai"
+    "on_device_ai",
+    "about",
+    "support"
   ],
   "definitions": {
     "placeholder": {
@@ -677,6 +679,79 @@
         "diagnostics_disclosure_url": {
           "type": "string",
           "pattern": "^https://"
+        }
+      }
+    },
+    "about": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "About screen (S16). contact_email stays a placeholder until the user gives the address; the screen hides it meanwhile.",
+      "required": [
+        "studio",
+        "contact_email",
+        "license",
+        "copyright_year"
+      ],
+      "properties": {
+        "studio": {
+          "type": "string",
+          "minLength": 1
+        },
+        "contact_email": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/placeholder"
+            },
+            {
+              "type": "string",
+              "pattern": "^[^@\\s<>]+@[^@\\s<>]+\\.[^@\\s<>]+$"
+            }
+          ]
+        },
+        "license": {
+          "type": "string",
+          "enum": [
+            "Apache-2.0"
+          ]
+        },
+        "copyright_year": {
+          "type": "integer",
+          "minimum": 2026
+        }
+      }
+    },
+    "support": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Buy the developer a coffee (S16): one consumable Google Play product; Android only until StoreKit is built on a Mac.",
+      "required": [
+        "coffee"
+      ],
+      "properties": {
+        "coffee": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "product_id",
+            "platforms"
+          ],
+          "properties": {
+            "product_id": {
+              "type": "string",
+              "pattern": "^[a-z0-9][a-z0-9._]{0,98}$"
+            },
+            "platforms": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "android",
+                  "ios"
+                ]
+              },
+              "uniqueItems": true
+            }
+          }
         }
       }
     }

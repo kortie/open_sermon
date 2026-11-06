@@ -2,6 +2,7 @@ import { defineConfig, type Plugin } from 'vite';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
 import appConfig from './config/app.config.json' with { type: 'json' };
+import pkg from './package.json' with { type: 'json' };
 import { cspFromConfig } from './scripts/build-csp.mjs';
 import { pdfCmapsPlugin } from './scripts/vite-pdf-cmaps';
 
@@ -33,6 +34,8 @@ function cspPlugin(): Plugin {
 // an app update.
 export default defineConfig(({ mode }) => ({
   base: '/',
+  // App version for the About screen (S16).
+  define: { __APP_VERSION__: JSON.stringify(pkg.version) },
   plugins: [
     react(),
     cspPlugin(),

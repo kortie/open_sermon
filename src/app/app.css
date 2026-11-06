@@ -1304,3 +1304,41 @@ a.button {
 .import__ref {
   font-weight: 600;
 }
+
+/* ── About (S16) */
+.about__license {
+  max-height: 60vh;
+  margin: 0.75rem 0 0;
+  padding: 0.75rem;
+  overflow: auto;
+  border-radius: 0.5rem;
+  background: var(--color-bg);
+  font-size: 0.75rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* ── Splash (S16): static markup in index.html, replaced when the app renders */
+.splash {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  background: #1f3a5f;
+}
+
+.splash__mark {
+  width: 8rem;
+  height: 8rem;
+}
+
+.splash__studio {
+  margin: 0;
+  color: #e8dcc2;
+  font-size: 1.125rem;
+  letter-spacing: 0.08em;
+}

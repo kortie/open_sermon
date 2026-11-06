@@ -61,7 +61,8 @@
     "home": "Home",
     "read": "Read",
     "settings": "Settings",
-    "sermons": "My Sermons"
+    "sermons": "My Sermons",
+    "about": "About"
   },
   "language": {
     "ko": "한국어",
@@ -819,5 +820,36 @@
   "bible_short": {
     "krv": "KRV",
     "kjv": "KJV"
+  },
+  "about": {
+    "title": "About",
+    "version": "Version {version}",
+    "made_by": "Made by {studio}",
+    "copyright": "© {year} {studio}",
+    "contact_title": "Contact",
+    "contact_send": "Send an email",
+    "contact_none": "The contact address is being prepared.",
+    "license_title": "License",
+    "license_body": "This app is licensed under the {license} license.",
+    "bible_text": "Bible text: Korean Revised Version (개역한글) and KJV (public domain), from crizin/bible-db.",
+    "show_app": "Show the app license",
+    "hide_app": "Hide the app license",
+    "show_third_party": "Show open-source notices",
+    "hide_third_party": "Hide open-source notices",
+    "coffee": {
+      "title": "Buy me a coffee",
+      "body": "If the app helps you, you can buy its maker a cup of coffee.",
+      "note": "Paid through Google Play. The app works the same either way, and you can do it as often as you like.",
+      "buy": "Buy a coffee",
+      "buy_price": "Buy a coffee ({price})",
+      "thanks": "Thank you! Enjoying the coffee.",
+      "pending": "The payment is still processing. Google Play will let you know when it is done.",
+      "error": {
+        "network": "Couldn't reach Google Play. Check your connection and tap again.",
+        "unavailable": "Payments aren't available on this phone right now.",
+        "busy": "The payment screen is already open.",
+        "unknown": "The payment didn't go through. Try again in a moment."
+      }
+    }
   }
 }

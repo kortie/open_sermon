@@ -17,6 +17,7 @@ const Library = lazy(() => import('./library/Library').then((m) => ({ default: m
 const Generate = lazy(() => import('./generate/Generate').then((m) => ({ default: m.Generate })));
 const Personas = lazy(() => import('./persona/Personas').then((m) => ({ default: m.Personas })));
 const ImportWizard = lazy(() => import('../ui/settings/bibles/ImportWizard').then((m) => ({ default: m.ImportWizard })));
+const About = lazy(() => import('./about/About').then((m) => ({ default: m.About })));
 const BibleGuide = lazy(() => import('../ui/settings/bibles/BibleGuide').then((m) => ({ default: m.BibleGuide })));
 
 /** Menu item that stays highlighted on screens opened from it. */
@@ -57,6 +58,7 @@ export function App() {
   else if (route.name === 'persona') screen = <Personas />;
   else if (route.name === 'bible-import') screen = <ImportWizard key={route.key} />;
   else if (route.name === 'bible-guide') screen = <BibleGuide />;
+  else if (route.name === 'about') screen = <About />;
   else if (route.name === 'generate') screen = <Generate key={route.key} refParam={route.params.get('ref') ?? ''} kindParam={route.params.get('kind') ?? undefined} />;
   else screen = <Home />;
 

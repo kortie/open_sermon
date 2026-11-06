@@ -1,7 +1,7 @@
 {
   "name": "open-sermon",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "engines": {
     "node": ">=22.12.0"
@@ -18,7 +18,9 @@
     "test:e2e": "playwright test tests/e2e",
     "test:network": "playwright test tests/network",
     "verify:db": "node scripts/verify-db.mjs",
-    "db:build": "node scripts/build-bible-db.mjs"
+    "db:build": "node scripts/build-bible-db.mjs",
+    "notices": "node scripts/build-notices.mjs",
+    "icons": "node scripts/build-icons.mjs"
   },
   "dependencies": {
     "@capacitor/android": "8.5.3",

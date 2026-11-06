@@ -328,5 +328,19 @@
     },
     "timeout_seconds": 60,
     "diagnostics_disclosure_url": "https://developers.google.com/ml-kit/android-data-disclosure"
+  },
+  "about": {
+    "studio": "JuanStudio",
+    "contact_email": "kortie00@gmail.com",
+    "license": "Apache-2.0",
+    "copyright_year": 2026
+  },
+  "support": {
+    "coffee": {
+      "product_id": "coffee",
+      "platforms": [
+        "android"
+      ]
+    }
   }
 }

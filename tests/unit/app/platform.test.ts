@@ -1,7 +1,7 @@
 // S13: platform branch for file exports (DESIGN 2.1.2). Browser → download; app → app cache file
 // handed to the share sheet; a closed share sheet is "cancelled", not an error.
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { isNativeApp, saveFile, toBase64, type NativeFileApi } from '../../../src/app/platform';
+import { coffeeBridgeFor, coffeeFailure, isNativeApp, nativeCoffee, saveFile, toBase64, type NativeFileApi } from '../../../src/app/platform';
 
 afterEach(() => vi.restoreAllMocks());
 
@@ -96,5 +96,58 @@ describe('on-device AI bridge (S15)', () => {
     plugin.download.mockRejectedValueOnce(new Error('x'));
     await expect(b.download()).rejects.toThrow('x');
     expect(removed).toHaveBeenCalledTimes(2);
+  });
+});
+
+// S16: coffee purchase bridge (DESIGN 3.17). Only fixed result/failure codes cross the bridge.
+describe('coffee bridge', () => {
+  it('is absent in the browser build', () => {
+    expect(nativeCoffee({ product_id: 'coffee', platforms: ['android'] })).toBeNull();
+  });
+
+  it('passes the configured product id and keeps only known fields', async () => {
+    const seen: string[] = [];
+    const bridge = coffeeBridgeFor(
+      {
+        product: async ({ productId }) => {
+          seen.push(`product ${productId}`);
+          return { available: true, price: '₩1,500', extra: 'x' } as { available: boolean; price?: string };
+        },
+        buy: async ({ productId }) => {
+          seen.push(`buy ${productId}`);
+          return { result: 'thanks' };
+        },
+      },
+      'coffee',
+    );
+    expect(await bridge.product()).toEqual({ available: true, price: '₩1,500' });
+    expect(await bridge.buy()).toBe('thanks');
+    expect(seen).toEqual(['product coffee', 'buy coffee']);
+  });
+
+  it('treats an unexpected product answer as unavailable and an unknown result as cancelled', async () => {
+    const bridge = coffeeBridgeFor(
+      {
+        product: async () => ({ available: 'yes', price: 3 }) as unknown as { available: boolean },
+        buy: async () => ({ result: 'weird' }) as unknown as { result: 'thanks' },
+      },
+      'coffee',
+    );
+    expect(await bridge.product()).toEqual({ available: false, price: undefined });
+    expect(await bridge.buy()).toBe('cancelled');
+  });
+
+  it('pending stays pending', async () => {
+    const bridge = coffeeBridgeFor({ product: async () => ({ available: true }), buy: async () => ({ result: 'pending' }) }, 'coffee');
+    expect(await bridge.buy()).toBe('pending');
+  });
+
+  it('maps rejections to fixed failure codes', () => {
+    expect(coffeeFailure({ code: 'network', message: 'x' })).toBe('network');
+    expect(coffeeFailure({ code: 'unavailable' })).toBe('unavailable');
+    expect(coffeeFailure({ code: 'busy' })).toBe('busy');
+    expect(coffeeFailure({ code: 'something-else' })).toBe('unknown');
+    expect(coffeeFailure(new Error('boom'))).toBe('unknown');
+    expect(coffeeFailure(null)).toBe('unknown');
   });
 });

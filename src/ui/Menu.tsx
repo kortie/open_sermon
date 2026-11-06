@@ -10,6 +10,7 @@ export const MENU_ITEMS: { name: RouteName; key: string }[] = [
   { name: 'read', key: 'nav.read' },
   { name: 'sermons', key: 'nav.sermons' },
   { name: 'settings', key: 'nav.settings' },
+  { name: 'about', key: 'nav.about' },
 ];
 
 export function Menu({ current }: { current: RouteName }) {

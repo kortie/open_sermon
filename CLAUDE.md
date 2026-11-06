@@ -1,6 +1,6 @@
 # CLAUDE.md — 성경 묵상 앱 (서버 없음)
 
-이 파일은 Claude Code가 이 저장소에서 작업할 때 따라야 할 규칙이다. 상세 설계는 `docs/DESIGN.md`(v0.20)를 기준으로 하고, 단계별 범위와 검증은 `docs/spec/`(상태 표 `docs/spec/README.md`, 단계 문서 `docs/spec/steps/SXX-*.md`)를 따른다. 설계와 이 파일이 충돌하면 작업을 멈추고 사용자에게 확인한다.
+이 파일은 Claude Code가 이 저장소에서 작업할 때 따라야 할 규칙이다. 상세 설계는 `docs/DESIGN.md`(v0.21)를 기준으로 하고, 단계별 범위와 검증은 `docs/spec/`(상태 표 `docs/spec/README.md`, 단계 문서 `docs/spec/steps/SXX-*.md`)를 따른다. 설계와 이 파일이 충돌하면 작업을 멈추고 사용자에게 확인한다.
 
 ---
 
@@ -9,15 +9,15 @@
 성경 본문을 읽고, 구절을 기준으로 말씀 나눔 초안, 삶에 닿는 예시, 가벼운 한마디를 얻는 **모바일 앱(Android, iOS)**이다. 하나의 웹 코드를 Capacitor로 감싸 두 플랫폼 앱으로 배포한다(DESIGN 2.1.2, v0.18).
 
 - **서버가 없다.** 정적 웹 자산과 본문 DB를 앱 패키지 안에 넣어 배포하고, 모든 데이터와 실행은 기기 안에서 한다. 앱이 원격 웹 자산을 불러오지 않는다(Capacitor `server.url` 금지).
-- 외부 통신은 사용자가 선택한 LLM 제공자의 공식 API 호출뿐이다. 예외: 휴대폰 안 AI(Android ML Kit GenAI)의 SDK 진단 정보 전송(DESIGN 2.2, 3.6.1, v0.20).
-- 스택: TypeScript, Vite, React, sql.js(번들 `bible.sqlite` 읽기), IndexedDB(사용자 데이터), WebCrypto(암호화), Capacitor 8(앱 래핑, 파일 공유, 휴대폰 안 AI 네이티브 플러그인 `OnDeviceAi`), Vitest, Playwright(모바일 뷰포트 테스트, 브라우저 빌드 기준)
+- 외부 통신은 사용자가 선택한 LLM 제공자의 공식 API 호출뿐이다. 예외: 휴대폰 안 AI(Android ML Kit GenAI)의 SDK 진단 정보 전송(DESIGN 2.2, 3.6.1, v0.20), Android "커피 사 주기"의 Google Play 결제(DESIGN 2.2, 3.17, v0.21).
+- 스택: TypeScript, Vite, React, sql.js(번들 `bible.sqlite` 읽기), IndexedDB(사용자 데이터), WebCrypto(암호화), Capacitor 8(앱 래핑, 파일 공유, 휴대폰 안 AI 네이티브 플러그인 `OnDeviceAi`, Google Play 결제 플러그인 `Coffee`), Vitest, Playwright(모바일 뷰포트 테스트, 브라우저 빌드 기준)
 
 ---
 
 ## 2. 절대 규칙
 
 1. **백엔드, 서버, 중계 서버를 만들지 않는다.** Node 서버, Python 서버, 서버리스 함수, 프록시를 추가하지 않는다. 필요하다고 판단되면 구현하지 말고 사용자에게 먼저 묻는다.
-2. **외부 네트워크 요청은 LLM 제공자 API 호출만 허용한다.** 분석 도구, 오류 수집기, 외부 폰트, CDN 스크립트, 이미지 원격 로딩을 넣지 않는다. CSP `connect-src`는 제공자 엔드포인트로 제한한다. **유일한 예외**: 휴대폰 안 AI용 ML Kit GenAI SDK(`com.google.mlkit:genai-prompt`)가 보내는 진단·사용 통계(입출력 글 제외). 설정의 휴대폰 안 AI 카드에 알리고, 그 밖의 SDK 전송은 추가하지 않는다(사용자 결정 2026-11-06).
+2. **외부 네트워크 요청은 LLM 제공자 API 호출만 허용한다.** 분석 도구, 오류 수집기, 외부 폰트, CDN 스크립트, 이미지 원격 로딩을 넣지 않는다. CSP `connect-src`는 제공자 엔드포인트로 제한한다. **예외는 두 가지뿐이다**: (1) 휴대폰 안 AI용 ML Kit GenAI SDK(`com.google.mlkit:genai-prompt`)가 보내는 진단·사용 통계(입출력 글 제외). 설정의 휴대폰 안 AI 카드에 알린다. (2) Android 만든이 화면의 "커피 사 주기"에서 Google Play Billing Library(`com.android.billingclient:billing`)가 Google Play 앱과 하는 상품 조회·결제 통신. 사용자가 누를 때만 일어난다. 그 밖의 SDK 전송은 추가하지 않는다(사용자 결정 2026-11-06).
 3. **독립 모드 경로는 LLM 모듈을 import하지 않는다.** `bible`, `bible-import`, `selection`, `sermon`(스타일 프로필 생성 호출은 `generate`에 둔다), `compose`, `persona`, `validate`, `vault`, `backup`, `store`는 `llm`과 `generate`에 의존하지 않는다. 린트 규칙으로 강제한다.
 4. **사용자 키는 non-extractable CryptoKey로 암호화해 IndexedDB에 저장한다.** 평문 저장, localStorage, sessionStorage, 콘솔 출력, 오류 메시지 포함을 금지한다. 화면에는 마지막 4자리만 표시한다.
 5. **사용자 비밀번호를 받거나 저장하지 않는다.** 웹 로그인 자동화 코드를 작성하지 않는다.
@@ -48,7 +48,7 @@
 open_sermon/
 ├── CLAUDE.md
 ├── docs/
-│   ├── DESIGN.md            # 설계 (v0.20)
+│   ├── DESIGN.md            # 설계 (v0.21)
 │   ├── PROVIDERS.md         # 제공자 브라우저 직접 호출 확인 기록 (S07)
 │   └── spec/
 │       ├── README.md        # 단계 상태 표

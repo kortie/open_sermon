@@ -2,8 +2,8 @@
 // reader's book panel.
 import { expect, type Page } from '@playwright/test';
 
-/** Open the side menu and go to a menu item (home, read, sermons, settings). */
-export async function nav(page: Page, name: 'home' | 'read' | 'sermons' | 'settings') {
+/** Open the side menu and go to a menu item (home, read, sermons, settings, about). */
+export async function nav(page: Page, name: 'home' | 'read' | 'sermons' | 'settings' | 'about') {
   await page.getByTestId('menu-open').click();
   await page.getByTestId(`nav-${name}`).click();
   await expect(page.getByTestId('menu')).toHaveCount(0);

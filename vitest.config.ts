@@ -2,6 +2,7 @@ import { defineConfig } from 'vitest/config';
 
 // Coverage thresholds mirror .claude/skills/sermon-verify/SKILL.md §1.2. Change both together.
 export default defineConfig({
+  define: { __APP_VERSION__: JSON.stringify('test') },
   test: {
     include: ['tests/unit/**/*.test.{ts,tsx}'],
     environment: 'jsdom',

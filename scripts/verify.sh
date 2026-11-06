@@ -75,6 +75,8 @@ run_static() {
   # (17) excluded bibles not active in config
   echo "── config bibles"
   if node scripts/check-config.mjs --bibles; then record "static:config-bibles" PASS; else record "static:config-bibles" FAIL; fi
+  # License notices must match node_modules (S16).
+  if node scripts/build-notices.mjs --check; then record "static:notices" PASS; else record "static:notices" FAIL; fi
 }
 
 # ── quick
@@ -111,7 +113,8 @@ if [ "$MODE" = full ]; then
     static_check "dist-no-remote-resources" grep -rnoE "<(script|link|img)[^>]+(src|href)=\"https?://" dist
     static_check "dist-no-trackers" grep -rnoE "fonts\.(googleapis|gstatic)\.com|googletagmanager|google-analytics|sentry\.io|datadog|mixpanel|amplitude" dist
     static_check "dist-no-key-strings" grep -rnoE "AIza[0-9A-Za-z_-]{30,}|sk-ant-[0-9A-Za-z_-]{20,}|sk-[0-9A-Za-z]{20,}" dist
-    static_check "dist-no-txt-bibles" sh -c 'find dist -iname "*.txt" ! -name robots.txt'
+    # Only the two license files (S16) may be .txt; any other .txt in dist could be a bible text.
+    static_check "dist-no-txt-bibles" sh -c 'find dist -iname "*.txt" ! -name robots.txt ! -path dist/licenses/app.txt ! -path dist/licenses/third-party.txt'
     run_gate "dist-csp" node scripts/check-csp.mjs dist/index.html
   else record "dist audit" FAIL "dist/ missing"; fi
 
