@@ -102,11 +102,28 @@
       "console_url": "https://aistudio.google.com/"
     },
     "openai": {
-      "endpoint": "https://api.openai.com/v1/chat/completions",
-      "model": "<모델명, 구현 시 문서 확인>",
+      "endpoint": "https://api.openai.com/v1/responses",
+      "model": "gpt-6.1-terra",
+      "models": [
+        "gpt-6.1-terra",
+        "gpt-6-luna",
+        "gpt-6.1-sol"
+      ],
       "browser_direct_verified": false,
-      "verified_on": "2026-11-05",
-      "unavailable_reason": "no_browser_access"
+      "unavailable_reason": "no_browser_access",
+      "app_direct_verified": true,
+      "verified_on": "2026-11-09",
+      "auth_header": "authorization_bearer",
+      "reasoning_effort": {
+        "gpt-6.1-terra": "none",
+        "gpt-6-luna": "none",
+        "gpt-6.1-sol": "low"
+      },
+      "reasoning_reserve_tokens": 4096,
+      "console_url": "https://platform.openai.com/",
+      "billing_url": "https://platform.openai.com/account/billing/overview",
+      "keys_url": "https://platform.openai.com/api-keys",
+      "docs_url": "https://developers.openai.com/api/docs/guides/error-codes"
     },
     "anthropic": {
       "endpoint": "https://api.anthropic.com/v1/messages",
@@ -307,7 +324,10 @@
     ],
     "beginner_recommendation": "gemini",
     "key_format_hints": {
-      "gemini": "AIza",
+      "gemini": [
+        "AQ.",
+        "AIza"
+      ],
       "openai": "sk-",
       "anthropic": "sk-ant-"
     }

@@ -1,7 +1,8 @@
 // S13: platform branch for file exports (DESIGN 2.1.2). Browser → download; app → app cache file
 // handed to the share sheet; a closed share sheet is "cancelled", not an error.
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { coffeeBridgeFor, coffeeFailure, isNativeApp, nativeCoffee, saveFile, toBase64, type NativeFileApi } from '../../../src/app/platform';
+import { appDirectEndpoints, coffeeBridgeFor, coffeeFailure, isNativeApp, nativeCoffee, nativeHttp, nativeHttpFor, saveFile, saveTextFile, sendTextByEmail, toBase64, type NativeFileApi, type NativeHttpPlugin, type TextExportApi } from '../../../src/app/platform';
+import { providers } from '../../../config/app.config.json';
 
 afterEach(() => vi.restoreAllMocks());
 
@@ -165,5 +166,125 @@ describe('launch splash', () => {
     const { signalLaunchReady } = await import('../../../src/app/platform');
     await expect(signalLaunchReady()).resolves.toBeUndefined();
     await expect(signalLaunchReady(true)).resolves.toBeUndefined();
+  });
+});
+
+const coded = (code: string) => Object.assign(new Error(code), { code });
+
+describe('saveTextFile (generation result)', () => {
+  it('app: straight into the Download folder, reporting the name the system kept', async () => {
+    const saveDownload = vi.fn<NonNullable<TextExportApi['saveDownload']>>(async () => ({ name: 'a (1).txt' }));
+    const { api: fileApi, calls } = fakeApi();
+    await expect(saveTextFile('a.txt', '가나', { native: true, api: { saveDownload }, fileApi })).resolves.toEqual({ kind: 'downloads', name: 'a (1).txt' });
+    expect(saveDownload).toHaveBeenCalledWith('a.txt', '가나');
+    expect(calls).toEqual([]);
+  });
+
+  it('app on an older Android (unsupported) or without the call: the share sheet with the file', async () => {
+    const { api: fileApi, calls } = fakeApi();
+    const saveDownload = async () => Promise.reject(coded('unsupported'));
+    await expect(saveTextFile('a.txt', '가나', { native: true, api: { saveDownload }, fileApi })).resolves.toEqual({ kind: 'saved' });
+    expect(calls).toEqual([`write exports/a.txt ${toBase64(new TextEncoder().encode('가나'))}`, 'share a.txt file:///cache/exports/a.txt']);
+    const ios = fakeApi(async () => {
+      throw new Error('Share canceled');
+    });
+    await expect(saveTextFile('a.txt', 'x', { native: true, api: {}, fileApi: ios.api })).resolves.toEqual({ kind: 'cancelled' });
+  });
+
+  it('app: a failed save is thrown, not hidden behind the share sheet', async () => {
+    const { api: fileApi, calls } = fakeApi();
+    await expect(saveTextFile('a.txt', 'x', { native: true, api: { saveDownload: async () => Promise.reject(coded('failed')) }, fileApi })).rejects.toThrow('failed');
+    expect(calls).toEqual([]);
+  });
+
+  it('browser: a download, never the app calls', async () => {
+    vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(() => undefined);
+    Object.assign(URL, { createObjectURL: vi.fn(() => 'blob:t'), revokeObjectURL: vi.fn() });
+    const saveDownload = vi.fn();
+    await expect(saveTextFile('a.txt', 'x', { native: false, api: { saveDownload } })).resolves.toEqual({ kind: 'saved' });
+    expect(saveDownload).not.toHaveBeenCalled();
+  });
+});
+
+describe('sendTextByEmail', () => {
+  it('app: the email app chooser with subject and body', async () => {
+    const email = vi.fn<NonNullable<TextExportApi['email']>>(async () => undefined);
+    const shareText = vi.fn();
+    await expect(sendTextByEmail('제목', '본문', '메일 앱', { native: true, api: { email, shareText } })).resolves.toBe('opened');
+    expect(email).toHaveBeenCalledWith('제목', '본문', '메일 앱');
+    expect(shareText).not.toHaveBeenCalled();
+  });
+
+  it('app without an email app (or iOS): the share sheet; closing it is "cancelled"', async () => {
+    const shareText = vi.fn<NonNullable<TextExportApi['shareText']>>(async () => undefined);
+    await expect(sendTextByEmail('s', 't', 'c', { native: true, api: { email: async () => Promise.reject(coded('no_app')), shareText } })).resolves.toBe('opened');
+    expect(shareText).toHaveBeenCalledWith('s', 't');
+    await expect(sendTextByEmail('s', 't', 'c', { native: true, api: { shareText: async () => Promise.reject(new Error('Share canceled')) } })).resolves.toBe('cancelled');
+    await expect(sendTextByEmail('s', 't', 'c', { native: true, api: { email: async () => Promise.reject(coded('weird')), shareText } })).rejects.toThrow('weird');
+  });
+
+  it('browser: the system share when there is one, otherwise a mailto: link with encoded subject and body', async () => {
+    const share = vi.fn(async () => undefined);
+    Object.defineProperty(navigator, 'share', { value: share, configurable: true });
+    await expect(sendTextByEmail('제목', '본문', 'c', { native: false, api: {} })).resolves.toBe('opened');
+    expect(share).toHaveBeenCalledWith({ title: '제목', text: '본문' });
+    Object.defineProperty(navigator, 'share', { value: undefined, configurable: true });
+    const loc = { href: '' };
+    vi.spyOn(window, 'location', 'get').mockReturnValue(loc as Location);
+    await expect(sendTextByEmail('a&b', '줄1\n줄2', 'c', { native: false, api: {} })).resolves.toBe('opened');
+    expect(loc.href).toBe(`mailto:?subject=a%26b&body=${encodeURIComponent('줄1\n줄2')}`);
+  });
+});
+
+describe('native HTTP (OpenAI in the app)', () => {
+  const ENDPOINT = 'https://api.example.test/v1/responses';
+  const plugin = (res: { status: number; data: unknown } | (() => Promise<{ status: number; data: unknown }>)) => {
+    const request = vi.fn<NativeHttpPlugin['request']>(typeof res === 'function' ? res : async () => res);
+    return { request };
+  };
+
+  it('endpoints come from app_direct_verified providers only (OpenAI in the repository config)', () => {
+    expect(appDirectEndpoints()).toEqual([providers.openai.endpoint]);
+    expect(
+      appDirectEndpoints({
+        a: { endpoint: 'https://a.test/x', browser_direct_verified: true, app_direct_verified: true },
+        b: { endpoint: 'ftp://b.test/x', browser_direct_verified: false, app_direct_verified: true },
+        c: { endpoint: '<placeholder>', browser_direct_verified: false, app_direct_verified: true },
+        d: { endpoint: 'https://d.test/x', browser_direct_verified: false },
+      }),
+    ).toEqual([]);
+    expect(nativeHttp(false)).toBeNull();
+  });
+
+  it('sends JSON bodies as data with the headers, and returns the status and body as a Response', async () => {
+    const p = plugin({ status: 401, data: '{"error":{"message":"bad"}}' });
+    const res = await nativeHttpFor(p, [ENDPOINT])(ENDPOINT, { method: 'POST', headers: { Authorization: 'Bearer k', 'content-type': 'application/json' }, body: '{"a":1}' });
+    expect(p.request).toHaveBeenCalledWith({ url: ENDPOINT, method: 'POST', headers: { authorization: 'Bearer k', 'content-type': 'application/json' }, data: { a: 1 }, responseType: 'text' });
+    expect(res.status).toBe(401);
+    expect(await res.json()).toEqual({ error: { message: 'bad' } });
+    const obj = plugin({ status: 200, data: { ok: true } });
+    expect(await (await nativeHttpFor(obj, [ENDPOINT])(`${ENDPOINT}/x`, { method: 'GET' })).json()).toEqual({ ok: true });
+  });
+
+  it('any other URL fails before a request (native calls are outside the page CSP)', async () => {
+    const p = plugin({ status: 200, data: '' });
+    const send = nativeHttpFor(p, [ENDPOINT]);
+    for (const url of ['https://evil.test/v1/responses', `${ENDPOINT}x`, 'https://api.example.test/v1/files', 'ftp://api.example.test/v1/responses']) {
+      await expect(send(url, { method: 'POST' })).rejects.toThrow('blocked');
+    }
+    expect(p.request).not.toHaveBeenCalled();
+  });
+
+  it('a cancel settles at once; an already cancelled request is never sent', async () => {
+    const p = plugin(() => new Promise(() => undefined));
+    const send = nativeHttpFor(p, [ENDPOINT]);
+    const ac = new AbortController();
+    const pending = send(ENDPOINT, { method: 'POST', signal: ac.signal });
+    ac.abort();
+    await expect(pending).rejects.toMatchObject({ name: 'AbortError' });
+    const done = new AbortController();
+    done.abort();
+    await expect(send(ENDPOINT, { method: 'POST', signal: done.signal })).rejects.toMatchObject({ name: 'AbortError' });
+    expect(p.request).toHaveBeenCalledTimes(1);
   });
 });

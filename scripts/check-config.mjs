@@ -95,10 +95,13 @@ export function checkConfig(cfg, { schema, bibleSources = null, bibleSourcesOpts
     }
   }
 
+  // A provider callable in the browser, or only in the app through native HTTP (app_direct_verified,
+  // user decision 2026-11-09), needs a real endpoint, a model and the date it was checked.
   for (const [name, p] of Object.entries(cfg.providers)) {
-    if (!p.browser_direct_verified) continue;
+    if (!p.browser_direct_verified && !p.app_direct_verified) continue;
+    const kind = p.browser_direct_verified ? 'browser_direct_verified' : 'app_direct_verified';
     if (isPlaceholder(p.endpoint) || isPlaceholder(p.model)) {
-      errors.push(`providers.${name} is browser_direct_verified but endpoint/model is still a placeholder`);
+      errors.push(`providers.${name} is ${kind} but endpoint/model is still a placeholder`);
     }
     else {
       let url = null;
@@ -110,7 +113,7 @@ export function checkConfig(cfg, { schema, bibleSources = null, bibleSourcesOpts
       if (url && url.protocol !== 'https:') errors.push(`providers.${name}.endpoint must use https (got ${url.protocol})`);
     }
     if (typeof p.verified_on !== 'string' || !DATE_RE.test(p.verified_on)) {
-      errors.push(`providers.${name} is browser_direct_verified but has no verified_on (YYYY-MM-DD)`);
+      errors.push(`providers.${name} is ${kind} but has no verified_on (YYYY-MM-DD)`);
     }
   }
 

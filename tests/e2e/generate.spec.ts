@@ -54,6 +54,18 @@ test('selection → everyday examples → transfer notice → result with AI not
   expect(await smallTargets(page)).toEqual([]);
   await visibleTextHasNoInternalTerms(page);
 
+  // Save as txt (browser build: a download) with the same content as the screen, no request.
+  await expect(page.getByTestId('result-email')).toHaveText(ko.result.export.email);
+  const [download] = await Promise.all([page.waitForEvent('download'), page.getByTestId('result-save-txt').click()]);
+  expect(download.suggestedFilename()).toMatch(/^포도나무에[ _]붙어[ _]있는[ _]삶[ _]\(.+\)\.txt$/);
+  const txt = readFileSync((await download.path())!, 'utf8');
+  expect(txt).toContain('포도나무에 붙어 있는 삶');
+  expect(txt).toContain('나는 포도나무요');
+  expect(txt).not.toContain('[[QUOTE');
+  expect(txt).toContain(ko.result.ai_notice);
+  await expect(page.getByTestId('result-export-status')).toHaveText(ko.result.export.saved);
+  expect(posts).toHaveLength(2);
+
   await page.getByTestId('result-example').first().getByTestId('result-ref').click();
   await expect(page.getByTestId('chapter-title')).toHaveText('요한복음 15장');
   await expect(page).toHaveURL(/#\/read\?ref=JHN\+15%3A4/);

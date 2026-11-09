@@ -37,7 +37,7 @@ async function toVerify(page: Page) {
   await expect(page.getByTestId('provider-gemini')).toHaveAttribute('aria-pressed', 'true');
   await page.getByTestId('wizard-next').click();
   await expect(page.getByTestId('get-key-steps').locator('li')).toHaveCount(5);
-  await expect(page.getByTestId('get-key-s4')).toContainText('AIza');
+  await expect(page.getByTestId('get-key-s4')).toContainText('AQ.');
   await expect(page.getByTestId('get-key-link-console_url')).toHaveAttribute('href', gemini.console_url);
   await expect(page.getByTestId('get-key-link-console_url')).toHaveAttribute('target', '_blank');
   await expect(page.getByText(ko.wizard.get_key.gemini.note)).toBeVisible();

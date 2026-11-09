@@ -35,7 +35,7 @@
 17. **기본 역본은 언어별로 고정한다.** 한국어는 개역한글(krv), 영어는 KJV(kjv). NIV는 라이선스 확인 전까지 번들, 배포, 프롬프트 인용 모두 금지한다.
 18. **설정 마법사는 건너뛸 수 있어야 하고, 건너뛰어도 독립 기능이 동작해야 한다.** 마법사 안에서 외부 링크를 앱이 미리 열거나 요청하지 않는다. 키 검증은 사용자가 버튼을 누를 때 한 번만 한다.
 19. **마법사 안내 문구는 `src/i18n/`의 ko, en 파일에서만 관리한다.** 발급 절차 문구는 제공자 공식 문서 확인 후에만 수정하고, 수정 날짜를 `docs/PROVIDERS.md`에 기록한다.
-20. **마법사에서 고를 수 있는 제공자는 `browser_direct_verified`가 `true`인 것뿐이다.** `false`인 제공자는 사유(`unavailable_reason`)를 적은 비활성 카드로만 보여줄 수 있고, 누르거나 고를 수 없다(DESIGN 3.13, v0.15). 검증 전 제공자를 "추천"으로 표시하지 않는다.
+20. **마법사에서 고를 수 있는 제공자는 `browser_direct_verified`가 `true`인 것뿐이다.** `false`인 제공자는 사유(`unavailable_reason`)를 적은 비활성 카드로만 보여줄 수 있고, 누르거나 고를 수 없다(DESIGN 3.13, v0.15). 검증 전 제공자를 "추천"으로 표시하지 않는다. **예외(사용자 결정 2026-11-09)**: 브라우저 CORS를 막는 제공자(OpenAI)는 기기에서 확인한 뒤 `app_direct_verified: true`로 두면 앱(Android, iOS) 안에서만 고를 수 있다. 호출은 Capacitor 네이티브 HTTP(`src/app/platform.ts` `nativeHttpFor`)로 하고, config 엔드포인트 외 주소는 요청 전에 막는다. 브라우저 빌드에서는 "휴대폰 앱에서만" 비활성 카드다. 추천으로 표시하지 않는다.
 21. **사용자가 가져오는 txt 역본은 권리 확인 체크 후에만 저장한다.** txt 외 형식은 받지 않는다. 가져온 역본은 기본적으로 백업과 배포에서 제외한다. 역본 본문을 생성 결과에 절 단위로 재인용하지 않도록 프롬프트에 지시하고, 복제 검사를 이 본문에도 적용한다.
 22. **내려받기 링크는 `config/bible-sources.json`에서만 관리한다.** 퍼블릭 도메인으로 확인되고 확인 날짜가 있는 항목만 "내려받기" 버튼으로 보여준다. 링크는 사용자가 누를 때만 열린다.
 23. **URL은 `config/`에서만 관리한다.** `src/`에 `http://`, `https://` 문자열을 직접 쓰지 않는다(제공자 엔드포인트, 발급 안내 링크, 역본 링크 모두 config에서 읽는다).
@@ -340,7 +340,8 @@ open_sermon/
 }
 ```
 
-- `browser_direct_verified`가 `true`로 확인되기 전에는 해당 제공자를 UI에서 고를 수 없게 한다. 비활성 카드 사유는 `unavailable_reason`(`pending_verification` | `no_browser_access`)이다.
+- `browser_direct_verified`가 `true`로 확인되기 전에는 해당 제공자를 UI에서 고를 수 없게 한다(예외: `app_direct_verified`, 절대 규칙 20). 비활성 카드 사유는 `unavailable_reason`(`pending_verification` | `no_browser_access`)이고, 앱 전용 제공자는 브라우저에서 `app_only`다.
+- OpenAI(2026-11-09): Responses API(`/v1/responses`), `store: false`, 모델별 `reasoning_effort`, 추론 모델은 `reasoning_reserve_tokens`만큼 출력 한도를 더한다. 키 확인은 최소 생성 1회(16토큰)로 크레딧 부족까지 잡는다. 앱 로그는 끈다(`loggingBehavior: 'none'`, 플러그인 호출 옵션에 키 헤더가 실리므로).
 - 위 예시는 자리표시자다. S07(2026-11-05)·S14·S15(2026-11-06)에서 확정한 값은 `config/app.config.json`과 `docs/PROVIDERS.md`를 따른다(Gemini·Anthropic 검증, 기본 추천 Gemini, 모델 목록 `models`).
 - 모델명, 엔드포인트, 반복 횟수 등 값은 구현 시 공식 문서로 확인해 채운다. 추측으로 넣지 않는다.
 - `local_limits`는 기기별 자가 제한이다. 전역 한도는 없다.

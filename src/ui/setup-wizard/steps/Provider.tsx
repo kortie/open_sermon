@@ -1,6 +1,6 @@
 // Step 4: provider cards (DESIGN 3.13). Only verified providers are choosable; others are disabled
 // cards with their reason from config. The recommendation badge appears on choosable cards only.
-import { providerCards, providerModels } from '../../../core/llm';
+import { providerCards, providerModels, modelI18nId } from '../../../core/llm';
 import { t } from '../../../i18n';
 import { ChoiceGroup } from '../../ChoiceGroup';
 import { BackButton, goStep, NextButton, Shell, type LlmDraft } from '../Shell';
@@ -67,7 +67,7 @@ export function Provider({ draft, setDraft }: { draft: LlmDraft; setDraft: (d: L
             testId="wizard-model-choices"
             vertical
             value={draft.model}
-            options={models.map((m) => ({ value: m, label: t(`llm.model_name.${m}`), description: t(`llm.model_desc.${m}`) }))}
+            options={models.map((m) => ({ value: m, label: t(`llm.model_name.${modelI18nId(m)}`), description: t(`llm.model_desc.${modelI18nId(m)}`) }))}
             onChange={(m) => setDraft({ ...draft, model: m })}
           />
         </>

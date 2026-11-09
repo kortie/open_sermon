@@ -1,7 +1,7 @@
 export * from './types';
-export { anthropicCause, geminiCause, readErrorBody, readGoogleError } from './errors';
+export { anthropicCause, geminiCause, openaiCause, readErrorBody, readGoogleError, readOpenAiError } from './errors';
 export { fetchWithTimeout } from './fetchWithTimeout';
-export { createClient, keyFormatOk, providerCards, providerConfig, providerModels, resolveModel, selectableProviders, type ProviderCard, type RegistryConfig } from './registry';
+export { createClient, keyFormatOk, modelI18nId, setNativeHttp, providerCards, providerConfig, providerModels, resolveModel, selectableProviders, type ProviderCard, type RegistryConfig } from './registry';
 export { DAILY_LIMIT, remainingToday, takeDailySlot } from './dailyLimit';
 export { connectedClient, disconnect, getConnection, setModel, verifyAndSaveKey, type Connection, type ConnectOptions } from './connection';
 export {

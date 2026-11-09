@@ -185,7 +185,8 @@
       "unavailable": "고를 수 없음",
       "reason": {
         "pending_verification": "확인 중이라 아직 쓸 수 없어요.",
-        "no_browser_access": "이 업체는 앱에서 바로 호출하는 방식을 제공하지 않습니다."
+        "no_browser_access": "이 업체는 앱에서 바로 호출하는 방식을 제공하지 않습니다.",
+        "app_only": "휴대폰 앱에서만 쓸 수 있어요."
       },
       "cost": {
         "anthropic": "결제 수단 등록과 크레딧 구매가 필요해요.",
@@ -219,12 +220,23 @@
         "s1": "Google AI Studio(aistudio.google.com)에 들어가 평소 쓰는 Google 계정으로 로그인하세요. 비밀번호는 Google 화면에만 입력합니다.",
         "s2": "화면의 \"Get API key\"(API 키 가져오기)를 누르세요.",
         "s3": "\"Create API key\"(API 키 만들기)를 누르세요. 프로젝트를 고르라고 나오면, 처음이면 \"Create API key in new project\"(새 프로젝트에서 만들기)를 고르세요. 프로젝트는 Google이 사용량을 묶어 관리하는 단위예요.",
-        "s4": "만들어진 키를 복사하세요. AIza로 시작해요.",
+        "s4": "만들어진 키를 복사하세요. AQ.로 시작해요(예전에 만든 키는 AIza로 시작할 수 있어요).",
         "s5": "앱으로 돌아와 다음 화면에 붙여넣으세요.",
         "note": "무료로 쓸 때는 보낸 내용이 Google 서비스 개선에 쓰이거나 사람이 검토할 수 있어요. 교인 이름처럼 민감한 내용은 보내지 마세요. 결제 계정으로 바꾸면 학습에 쓰이지 않아요. 무료 사용에는 횟수 제한이 있어요.",
         "open_console": "Google AI Studio 열기"
       },
-      "common": "키는 다른 사람에게 보내지 마세요. 화면을 찍어 공유하지도 마세요. 키가 새어 나갔다고 생각되면 제공자 사이트에서 바로 지우고 새로 만든 뒤, 앱 설정에서 바꿔 주세요."
+      "common": "키는 다른 사람에게 보내지 마세요. 화면을 찍어 공유하지도 마세요. 키가 새어 나갔다고 생각되면 제공자 사이트에서 바로 지우고 새로 만든 뒤, 앱 설정에서 바꿔 주세요.",
+      "openai": {
+        "s1": "OpenAI 개발자 플랫폼(platform.openai.com)에 들어가 로그인하세요. ChatGPT와 같은 계정을 쓸 수 있어요. 비밀번호는 OpenAI 화면에만 입력합니다.",
+        "s2": "결제(Billing) 화면에서 결제 수단을 등록하고 크레딧을 충전하세요. 충전하지 않으면 키를 만들어도 쓸 수 없어요.",
+        "s3": "API keys 화면에서 새 키를 만드세요. 이름은 알아보기 쉽게(예: \"말씀 앱\") 적으면 돼요.",
+        "s4": "만들어진 키를 바로 복사하세요. sk-로 시작해요. 창을 닫으면 다시 볼 수 없으니 먼저 복사해 두세요.",
+        "s5": "앱으로 돌아와 다음 화면에 붙여넣으세요.",
+        "note": "ChatGPT 구독(Plus 등)과 API 요금은 따로입니다. 무료로 쓸 수 있는 양이 없어서 크레딧 충전이 필요해요. OpenAI 연결은 휴대폰 앱에서만 쓸 수 있어요.",
+        "open_console": "OpenAI 플랫폼 열기",
+        "open_billing": "결제 화면 열기",
+        "open_keys": "API keys 화면 열기"
+      }
     },
     "paste_key": {
       "title": "만든 열쇠를 붙여넣으세요",
@@ -604,8 +616,8 @@
   },
   "llm": {
     "provider_name": {
-      "gemini": "Gemini (Google)",
-      "openai": "OpenAI",
+      "gemini": "Google (Gemini)",
+      "openai": "OpenAI (ChatGPT)",
       "anthropic": "Anthropic (Claude)",
       "device": "이 휴대폰의 AI"
     },
@@ -614,14 +626,20 @@
       "claude-sonnet-5-5": "Claude Sonnet 5.5",
       "claude-opus-5-5": "Claude Opus 5.5",
       "gemini-flash-latest": "Gemini Flash",
-      "gemini-flash-lite-latest": "Gemini Flash-Lite"
+      "gemini-flash-lite-latest": "Gemini Flash-Lite",
+      "gpt-6_1-terra": "GPT-6.1 Terra",
+      "gpt-6-luna": "GPT-6 Luna",
+      "gpt-6_1-sol": "GPT-6.1 Sol"
     },
     "model_desc": {
       "claude-haiku-5-5": "빠르고 저렴함",
       "claude-sonnet-5-5": "균형",
       "claude-opus-5-5": "가장 정교함",
       "gemini-flash-latest": "균형, 무료로 시작",
-      "gemini-flash-lite-latest": "더 빠르고 가벼움"
+      "gemini-flash-lite-latest": "더 빠르고 가벼움",
+      "gpt-6_1-terra": "균형, 빠름",
+      "gpt-6-luna": "가장 싸고 가벼움",
+      "gpt-6_1-sol": "더 깊이 생각함, 요금 높음"
     },
     "error": {
       "format": "붙여넣은 내용이 키 형식과 다릅니다. {provider} 키는 {prefix}로 시작해요. 다시 복사해서 붙여넣어 주세요.",
@@ -677,7 +695,17 @@
     "verse_refs": "근거 절",
     "quote": "본문 인용 · {bible}",
     "purpose": "이렇게 쓰면 좋아요: {purpose}",
-    "from_cache": "전에 같은 조건으로 만든 결과입니다. 새로 요청하지 않았습니다."
+    "from_cache": "전에 같은 조건으로 만든 결과입니다. 새로 요청하지 않았습니다.",
+    "export": {
+      "email": "이메일로 보내기",
+      "save_txt": "txt로 저장",
+      "note": "이메일은 휴대폰의 메일 앱에서 직접 보내요. 앱이 대신 보내지 않아요.",
+      "email_chooser": "메일 앱 고르기",
+      "saved_downloads": "다운로드 폴더에 저장했어요: {name}",
+      "saved": "고르신 곳으로 파일을 보냈어요.",
+      "save_failed": "저장하지 못했어요. 다시 해 보세요.",
+      "email_failed": "메일 앱을 열지 못했어요. txt로 저장한 뒤 보내 보세요."
+    }
   },
   "fallback": {
     "title": "대신 직접 준비할 자료를 보여 드립니다",

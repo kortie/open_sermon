@@ -2,8 +2,9 @@
 // on the platform. Files are never sent anywhere by the app: in the browser they are downloaded,
 // in the app they are written to the app's cache folder and handed to the system share sheet, where
 // the user picks where to save or send them.
-import { Capacitor, registerPlugin, type PluginListenerHandle } from '@capacitor/core';
-import type { DeviceAiBridge, DeviceAiInfo } from '../core/llm';
+import { Capacitor, CapacitorHttp, registerPlugin, type PluginListenerHandle } from '@capacitor/core';
+import { providers } from '../../config/app.config.json';
+import type { DeviceAiBridge, DeviceAiInfo, FetchFn } from '../core/llm';
 
 export function isNativeApp(): boolean {
   return Capacitor.isNativePlatform();
@@ -64,6 +65,131 @@ export async function saveFile(name: string, blob: Blob, opts: { native?: boolea
     if (isCancel(err)) return 'cancelled';
     throw err;
   }
+}
+
+export type TextSaveResult = { kind: 'downloads'; name: string } | { kind: 'saved' } | { kind: 'cancelled' };
+
+/** Native text-export calls (ShellPlugin.java). Rejections carry a fixed code. */
+export interface TextExportApi {
+  saveDownload?: (name: string, text: string) => Promise<{ name: string }>;
+  email?: (subject: string, text: string, chooser: string) => Promise<void>;
+  shareText?: (subject: string, text: string) => Promise<void>;
+}
+
+const codeOf = (err: unknown) => (typeof err === 'object' && err !== null && 'code' in err ? (err as { code: unknown }).code : undefined);
+
+function nativeTextApi(native: boolean): TextExportApi {
+  if (!native) return {};
+  const plugin = Capacitor.isPluginAvailable('Shell') ? registerPlugin<ShellPlugin>('Shell') : null;
+  return {
+    saveDownload: plugin ? (name, text) => plugin.saveDownload({ name, text }) : undefined,
+    email: plugin ? (subject, text, chooser) => plugin.email({ subject, text, chooser }) : undefined,
+    shareText: async (subject, text) => {
+      const { Share } = await import('@capacitor/share');
+      await Share.share({ title: subject, text, dialogTitle: subject });
+    },
+  };
+}
+
+/**
+ * Save a text the user asked to keep (a generated result). Android 10+ app: straight into the
+ * Download folder. Older Android and iOS: the share sheet (the user picks where). Browser: a download.
+ */
+export async function saveTextFile(name: string, text: string, opts: { native?: boolean; api?: TextExportApi; fileApi?: NativeFileApi } = {}): Promise<TextSaveResult> {
+  const native = opts.native ?? isNativeApp();
+  const api = opts.api ?? nativeTextApi(native);
+  if (native && api.saveDownload) {
+    try {
+      return { kind: 'downloads', name: (await api.saveDownload(name, text)).name };
+    } catch (err) {
+      if (codeOf(err) !== 'unsupported') throw err;
+    }
+  }
+  const r = await saveFile(name, new Blob([text], { type: 'text/plain;charset=utf-8' }), { native, api: opts.fileApi });
+  return { kind: r };
+}
+
+/**
+ * Hand a text to the user's email app (subject and body filled in). The app sends nothing itself.
+ * Android app: a chooser of email apps, or the share sheet when there is none. iOS app: the share
+ * sheet (Mail is in it). Browser: the system share when there is one, otherwise a mailto: link.
+ */
+export async function sendTextByEmail(subject: string, text: string, chooser: string, opts: { native?: boolean; api?: TextExportApi } = {}): Promise<'opened' | 'cancelled'> {
+  const native = opts.native ?? isNativeApp();
+  const api = opts.api ?? nativeTextApi(native);
+  try {
+    if (native && api.email) {
+      try {
+        await api.email(subject, text, chooser);
+        return 'opened';
+      } catch (err) {
+        if (codeOf(err) !== 'no_app' || !api.shareText) throw err;
+      }
+    }
+    if (native && api.shareText) {
+      await api.shareText(subject, text);
+      return 'opened';
+    }
+    if (typeof navigator.share === 'function') {
+      await navigator.share({ title: subject, text });
+      return 'opened';
+    }
+  } catch (err) {
+    if (isCancel(err) || (err instanceof DOMException && err.name === 'AbortError')) return 'cancelled';
+    throw err;
+  }
+  window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(text)}`;
+  return 'opened';
+}
+
+/** Native HTTP request of the app (Capacitor's CapacitorHttp plugin). */
+export interface NativeHttpPlugin {
+  request(o: { url: string; method: string; headers: Record<string, string>; data?: unknown; responseType: 'text' }): Promise<{ status: number; data: unknown }>;
+}
+
+const aborted = () => new DOMException('Aborted', 'AbortError');
+
+/** Endpoints of providers used only through the app's native HTTP (config app_direct_verified). */
+export function appDirectEndpoints(cfg: Record<string, { endpoint: string; browser_direct_verified: boolean; app_direct_verified?: boolean }> = providers): string[] {
+  return Object.values(cfg)
+    .filter((p) => p.browser_direct_verified !== true && p.app_direct_verified === true && URL.canParse(p.endpoint) && new URL(p.endpoint).protocol === 'https:')
+    .map((p) => p.endpoint);
+}
+
+/**
+ * fetch over native HTTP, for providers whose servers refuse browser CORS (OpenAI; user decision
+ * 2026-11-09). Native requests are outside the page CSP, so this checks the URL itself: only the
+ * configured endpoints (exact, or a path below one) are sent; anything else fails before a request.
+ * A cancel settles at once (the native request finishes on its own and is ignored).
+ */
+export function nativeHttpFor(plugin: NativeHttpPlugin, allowed: readonly string[]): FetchFn {
+  return async (url, init) => {
+    if (!allowed.some((a) => url === a || url.startsWith(`${a}/`))) throw new TypeError('blocked');
+    const signal = init.signal;
+    if (signal?.aborted) throw aborted();
+    const headers = Object.fromEntries(new Headers(init.headers).entries());
+    let data: unknown;
+    if (typeof init.body === 'string') {
+      try {
+        data = JSON.parse(init.body);
+      } catch {
+        data = init.body;
+      }
+    }
+    const request = plugin.request({ url, method: init.method ?? 'GET', headers, data, responseType: 'text' });
+    const res = signal
+      ? await Promise.race([request, new Promise<never>((_, reject) => signal.addEventListener('abort', () => reject(aborted()), { once: true }))])
+      : await request;
+    const text = typeof res.data === 'string' ? res.data : JSON.stringify(res.data ?? null);
+    return new Response(text, { status: res.status });
+  };
+}
+
+/** Native HTTP for app-only providers in the app; null in the browser build. */
+export function nativeHttp(native = isNativeApp()): FetchFn | null {
+  const allowed = appDirectEndpoints();
+  if (!native || allowed.length === 0) return null;
+  return nativeHttpFor(CapacitorHttp as unknown as NativeHttpPlugin, allowed);
 }
 
 /** Native OnDeviceAi plugin (android/app/src/main/java/.../OnDeviceAiPlugin.java). */
@@ -158,6 +284,8 @@ export function webSplashMinMs(native = isNativeApp()): number {
 interface ShellPlugin {
   ready(): Promise<void>;
   exit(): Promise<void>;
+  saveDownload(o: { name: string; text: string }): Promise<{ name: string }>;
+  email(o: { subject: string; text: string; chooser: string }): Promise<void>;
   addListener(event: 'back', fn: () => void): Promise<PluginListenerHandle>;
 }
 

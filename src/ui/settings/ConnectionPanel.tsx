@@ -4,7 +4,7 @@
 import { useEffect, useState } from 'react';
 import { navigate } from '../../app/router';
 import { preferences, usePreferences } from '../../app/preferences';
-import { disconnect, getConnection, providerModels, selectableProviders, setModel, type Connection } from '../../core/llm';
+import { disconnect, getConnection, providerModels, selectableProviders, setModel, type Connection, modelI18nId } from '../../core/llm';
 import { maskKey } from '../../core/vault';
 import { t } from '../../i18n';
 import { ChoiceGroup } from '../ChoiceGroup';
@@ -80,10 +80,10 @@ export function ConnectionPanel() {
                 testId="connection-model"
                 vertical
                 value={conn.model}
-                options={models.map((m) => ({ value: m, label: t(`llm.model_name.${m}`), description: t(`llm.model_desc.${m}`) }))}
+                options={models.map((m) => ({ value: m, label: t(`llm.model_name.${modelI18nId(m)}`), description: t(`llm.model_desc.${modelI18nId(m)}`) }))}
                 onChange={(m) => {
-                  setConn({ ...conn, model: m });
-                  void setModel(conn.provider, m);
+                  // Shown as chosen once saved, so leaving right away cannot lose the choice.
+                  void setModel(conn.provider, m).then(() => setConn({ ...conn, model: m }));
                 }}
               />
             </>

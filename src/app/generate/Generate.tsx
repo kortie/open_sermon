@@ -275,6 +275,7 @@ function GenerateScreen({ refText, reference, kind, ctx, bibleId, verses, import
             verses={verses}
             bibleId={bibleId}
             lang={lang}
+            refText={refText}
             fromCache={o.fromCache}
             only={ctx.mode === 'device' ? (kind === 'sermon' ? 'sermon' : kind === 'example' ? 'examples' : 'humor') : undefined}
           />

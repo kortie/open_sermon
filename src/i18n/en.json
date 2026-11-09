@@ -185,7 +185,8 @@
       "unavailable": "Not available",
       "reason": {
         "pending_verification": "Still being checked, not available yet.",
-        "no_browser_access": "This company does not offer direct calls from an app."
+        "no_browser_access": "This company does not offer direct calls from an app.",
+        "app_only": "Available in the phone app only."
       },
       "cost": {
         "anthropic": "Needs a payment method and purchased credits.",
@@ -219,12 +220,23 @@
         "s1": "Open Google AI Studio (aistudio.google.com) and sign in with your usual Google account. You type your password only on Google's page.",
         "s2": "Tap \"Get API key\".",
         "s3": "Tap \"Create API key\". If asked for a project and this is your first time, choose \"Create API key in new project\". A project is how Google groups your usage.",
-        "s4": "Copy the new key. It starts with AIza.",
+        "s4": "Copy the new key. It starts with AQ. (keys made earlier may start with AIza).",
         "s5": "Come back to the app and paste it on the next screen.",
         "note": "On the free tier, what you send may be used to improve Google services and may be reviewed by people. Do not send sensitive details such as church members' names. With a billing account it is not used for training. Free use has request limits.",
         "open_console": "Open Google AI Studio"
       },
-      "common": "Never send your key to anyone or share a screenshot of it. If you think it leaked, delete it on the provider's site, create a new one, and replace it in Settings."
+      "common": "Never send your key to anyone or share a screenshot of it. If you think it leaked, delete it on the provider's site, create a new one, and replace it in Settings.",
+      "openai": {
+        "s1": "Go to the OpenAI developer platform (platform.openai.com) and log in. You can use the same account as ChatGPT. Enter your password only on OpenAI's page.",
+        "s2": "In Billing, add a payment method and buy credits. Without credits the key will not work.",
+        "s3": "In API keys, create a new key. Give it an easy name (e.g. \"Bible app\").",
+        "s4": "Copy the key right away. It starts with sk-. It may not be shown again once you close the window.",
+        "s5": "Come back to the app and paste it on the next screen.",
+        "note": "A ChatGPT subscription (Plus, etc.) is separate from API charges. There is no free usage, so you need to buy credits. The OpenAI connection works in the phone app only.",
+        "open_console": "Open OpenAI platform",
+        "open_billing": "Open Billing",
+        "open_keys": "Open API keys"
+      }
     },
     "paste_key": {
       "title": "Paste the key you created",
@@ -604,8 +616,8 @@
   },
   "llm": {
     "provider_name": {
-      "gemini": "Gemini (Google)",
-      "openai": "OpenAI",
+      "gemini": "Google (Gemini)",
+      "openai": "OpenAI (ChatGPT)",
       "anthropic": "Anthropic (Claude)",
       "device": "This phone's AI"
     },
@@ -614,14 +626,20 @@
       "claude-sonnet-5-5": "Claude Sonnet 5.5",
       "claude-opus-5-5": "Claude Opus 5.5",
       "gemini-flash-latest": "Gemini Flash",
-      "gemini-flash-lite-latest": "Gemini Flash-Lite"
+      "gemini-flash-lite-latest": "Gemini Flash-Lite",
+      "gpt-6_1-terra": "GPT-6.1 Terra",
+      "gpt-6-luna": "GPT-6 Luna",
+      "gpt-6_1-sol": "GPT-6.1 Sol"
     },
     "model_desc": {
       "claude-haiku-5-5": "Fast and low cost",
       "claude-sonnet-5-5": "Balanced",
       "claude-opus-5-5": "Most capable",
       "gemini-flash-latest": "Balanced, free to start",
-      "gemini-flash-lite-latest": "Faster and lighter"
+      "gemini-flash-lite-latest": "Faster and lighter",
+      "gpt-6_1-terra": "Balanced and fast",
+      "gpt-6-luna": "Lowest cost and lightest",
+      "gpt-6_1-sol": "Thinks more deeply, higher cost"
     },
     "error": {
       "format": "What you pasted does not look like a key. {provider} keys start with {prefix}. Copy it again and paste it here.",
@@ -677,7 +695,17 @@
     "verse_refs": "Supporting verses",
     "quote": "Passage quote · {bible}",
     "purpose": "How to use it: {purpose}",
-    "from_cache": "This result was made earlier with the same choices. No new request was sent."
+    "from_cache": "This result was made earlier with the same choices. No new request was sent.",
+    "export": {
+      "email": "Send by email",
+      "save_txt": "Save as txt",
+      "note": "You send the email from your phone's mail app. The app does not send it for you.",
+      "email_chooser": "Choose a mail app",
+      "saved_downloads": "Saved to the Download folder: {name}",
+      "saved": "Sent the file to the place you chose.",
+      "save_failed": "Could not save. Please try again.",
+      "email_failed": "Could not open a mail app. Save as txt and send it instead."
+    }
   },
   "fallback": {
     "title": "Here is material to prepare it yourself",

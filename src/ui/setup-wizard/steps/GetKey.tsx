@@ -20,6 +20,14 @@ const STEPS: Record<string, { items: string[]; links: { key: 'console_url' | 'bi
     items: ['s1', 's2', 's3', 's4', 's5'],
     links: [{ key: 'console_url', label: 'open_console' }],
   },
+  openai: {
+    items: ['s1', 's2', 's3', 's4', 's5'],
+    links: [
+      { key: 'console_url', label: 'open_console' },
+      { key: 'billing_url', label: 'open_billing' },
+      { key: 'keys_url', label: 'open_keys' },
+    ],
+  },
 };
 
 export function GetKey({ provider }: { provider: string }) {

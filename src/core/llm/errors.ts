@@ -75,3 +75,40 @@ export function geminiCause(status: number, body: GoogleErrorBody): LlmCause {
   if (body.status === 'FAILED_PRECONDITION' && /location is not supported/i.test(body.message ?? '')) return 'region';
   return 'unknown';
 }
+
+export interface OpenAiErrorBody {
+  type?: string;
+  code?: string;
+  message?: string;
+}
+
+/** `{ error: { message, type, code } }` (OpenAI) → its parts; anything else → {}. */
+export function readOpenAiError(json: unknown): OpenAiErrorBody {
+  if (typeof json !== 'object' || json === null) return {};
+  const err = (json as { error?: unknown }).error;
+  if (typeof err !== 'object' || err === null) return {};
+  const { type, code, message } = err as { type?: unknown; code?: unknown; message?: unknown };
+  const str = (v: unknown) => (typeof v === 'string' ? v : undefined);
+  return { type: str(type), code: str(code), message: str(message) };
+}
+
+const OPENAI_BILLING_CODES = ['credit_balance_exhausted', 'insufficient_quota'];
+const OPENAI_LIMIT_CODES = ['organization_spend_limit_exceeded', 'project_spend_limit_exceeded', 'organization_usage_limit_exceeded', 'rate_limit_exceeded', 'slow_down'];
+
+/**
+ * OpenAI API error codes (developers.openai.com/api/docs/guides/error-codes, checked 2026-11-09).
+ * - 401 (invalid or revoked key, not in an organization, IP not allowed) → auth
+ * - 403 "Country, region, or territory not supported" → region; other 403 → unknown
+ * - 429 no prepaid credits (code credit_balance_exhausted; type may be insufficient_quota) → billing
+ * - 429 spend/usage limits and rate limits → quota
+ * - anything else → unknown
+ */
+export function openaiCause(status: number, body: OpenAiErrorBody): LlmCause {
+  if (status === 401) return 'auth';
+  if (status === 403) return /country, region, or territory/i.test(body.message ?? '') ? 'region' : 'unknown';
+  if (status === 429) {
+    if (OPENAI_BILLING_CODES.includes(body.code ?? '') || (body.type === 'insufficient_quota' && !OPENAI_LIMIT_CODES.includes(body.code ?? ''))) return 'billing';
+    return 'quota';
+  }
+  return 'unknown';
+}

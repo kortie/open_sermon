@@ -55,6 +55,12 @@ export interface ProviderConfig {
   models?: string[];
   browser_direct_verified: boolean;
   unavailable_reason?: 'pending_verification' | 'no_browser_access';
+  /** Callable from the Android/iOS app through native HTTP only (no browser CORS); user decision 2026-11-09. */
+  app_direct_verified?: boolean;
+  /** OpenAI Responses API reasoning.effort per model id. */
+  reasoning_effort?: Record<string, string>;
+  /** Extra output tokens when the model reasons (reasoning tokens count against max_output_tokens). */
+  reasoning_reserve_tokens?: number;
   api_version?: string;
   auth_header?: string;
   browser_access_header?: string;

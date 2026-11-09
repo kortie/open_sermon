@@ -2,12 +2,14 @@ import { StrictMode, useEffect, type ReactNode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { App } from './app/App';
 import { BACK_EVENT, installBackKey } from './app/back';
-import { connectBackKey, nativeDeviceAi, signalLaunchReady, webSplashMinMs } from './app/platform';
+import { connectBackKey, nativeDeviceAi, nativeHttp, signalLaunchReady, webSplashMinMs } from './app/platform';
 import { loadPreferences } from './app/preferences';
-import { setDeviceAiBridge } from './core/llm';
+import { setDeviceAiBridge, setNativeHttp } from './core/llm';
 import './app/app.css';
 
 setDeviceAiBridge(nativeDeviceAi());
+// OpenAI refuses browser CORS; in the app it is called over native HTTP (user decision 2026-11-09).
+setNativeHttp(nativeHttp());
 
 // Android back key: one press undoes one thing (DESIGN 8장). In the browser nothing sends the event
 // and there is no app to leave.

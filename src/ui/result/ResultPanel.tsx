@@ -1,11 +1,14 @@
 // Generation result (DESIGN 3.7, 6.2; CLAUDE.md rules 9, 15). Text nodes only: model output never
 // becomes HTML. [[QUOTE ref]] markers are filled with the bundled DB text and shown as quotes; the
-// model's own words never stand in for Scripture. The AI-draft notice sits at the top and bottom.
+// model's own words never stand in for Scripture. The AI-draft notice sits at the top and bottom,
+// followed by "send by email" and "save as txt" (ResultExport).
 import { Fragment } from 'react';
-import { formatReference, parseReference, verseSet, type Verse } from '../../core/bible';
+import { formatReference, parseReference, type Verse } from '../../core/bible';
 import { splitQuotes, type GenerationOutput } from '../../core/validate';
 import { routeHref } from '../../app/router';
 import { t } from '../../i18n';
+import { ResultExport } from './ResultExport';
+import { quoteText } from './resultText';
 
 type Lang = 'ko' | 'en';
 
@@ -15,6 +18,8 @@ interface Props {
   verses: readonly Verse[];
   bibleId: string;
   lang: Lang;
+  /** The passage the result was made for (file name, email subject). */
+  refText: string;
   fromCache?: boolean;
   /** On-device AI (S15): show only this section. */
   only?: 'sermon' | 'examples' | 'humor';
@@ -43,15 +48,6 @@ function Refs({ refs, lang }: { refs: readonly string[]; lang: Lang }) {
       ))}
     </p>
   );
-}
-
-/** Bundled verses named by a quote marker ("<verse> <text>" per line), or null. */
-function quoteText(refText: string, verses: readonly Verse[]): string | null {
-  const p = parseReference(refText);
-  if (!p.ok) return null;
-  const wanted = p.ref.ranges.length ? verseSet(p.ref) : null;
-  const lines = verses.filter((v) => v.book === p.ref.book && v.chapter === p.ref.chapter && (!wanted || wanted.has(v.verse)));
-  return lines.length ? lines.map((v) => `${v.verse} ${v.text}`).join('\n') : null;
 }
 
 /** Model text with quote markers replaced by bundled-text quote blocks. */
@@ -88,7 +84,7 @@ function AiNotice({ testId }: { testId: string }) {
   );
 }
 
-export function ResultPanel({ output, humorDropped, verses, bibleId, lang, fromCache, only }: Props) {
+export function ResultPanel({ output, humorDropped, verses, bibleId, lang, refText, fromCache, only }: Props) {
   return (
     <article className="result" data-testid="result-panel">
       <AiNotice testId="result-notice-top" />
@@ -150,6 +146,7 @@ export function ResultPanel({ output, humorDropped, verses, bibleId, lang, fromC
       )}
 
       <AiNotice testId="result-notice-bottom" />
+      <ResultExport output={output} humorDropped={humorDropped} verses={verses} bibleId={bibleId} lang={lang} refText={refText} only={only} />
     </article>
   );
 }

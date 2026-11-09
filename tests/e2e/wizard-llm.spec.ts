@@ -49,7 +49,7 @@ test('step 4: verified providers are choosable, Gemini preselected and recommend
   await expect(page.getByTestId('provider-gemini-recommended')).toHaveText(ko.wizard.provider.recommended);
   await expect(page.getByTestId('provider-anthropic-recommended')).toHaveCount(0);
   await expect(page.getByTestId('wizard-model-choices').locator('[data-value="gemini-flash-latest"]')).toHaveAttribute('aria-pressed', 'true');
-  for (const [id, reason] of [['openai', ko.wizard.provider.reason.no_browser_access]] as const) {
+  for (const [id, reason] of [['openai', ko.wizard.provider.reason.app_only]] as const) {
     const card = page.getByTestId(`provider-${id}`);
     await expect(card).toHaveAttribute('aria-disabled', 'true');
     expect(await card.evaluate((el) => el.tagName)).toBe('DIV');
@@ -147,6 +147,8 @@ test('success: one tap → exactly one request, masked key, consent, done; no ke
   await expect(page.getByTestId('connection-key')).toHaveText(ko.settings.connection.key.replace('{masked}', '••••7Q9z'));
   await expect(page.getByTestId('connection-model').locator('[data-value="claude-sonnet-5-5"]')).toHaveAttribute('aria-pressed', 'true');
   await page.getByTestId('connection-model').locator('[data-value="claude-haiku-5-5"]').click();
+  // Marked as chosen only after it is saved.
+  await expect(page.getByTestId('connection-model').locator('[data-value="claude-haiku-5-5"]')).toHaveAttribute('aria-pressed', 'true');
   await page.reload();
   await expect(page.getByTestId('connection-model').locator('[data-value="claude-haiku-5-5"]')).toHaveAttribute('aria-pressed', 'true');
   await noKeyInBrowserState(page, KEY);

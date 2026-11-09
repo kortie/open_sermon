@@ -8,20 +8,21 @@ const repo = JSON.parse(readFileSync('config/app.config.json', 'utf8')) as Regis
 
 function fixture(): RegistryConfig {
   const cfg = structuredClone(repo);
-  // anthropic and gemini unverified, plus a verified provider without an adapter (openai).
+  // anthropic and gemini unverified, plus a verified provider without an adapter (other).
   cfg.providers.anthropic = { ...cfg.providers.anthropic!, browser_direct_verified: false, unavailable_reason: 'pending_verification' };
   cfg.providers.gemini = { ...cfg.providers.gemini!, browser_direct_verified: false, unavailable_reason: 'pending_verification' };
-  cfg.providers.openai = { ...cfg.providers.openai!, model: 'o-1', browser_direct_verified: true };
+  cfg.providers.other = { endpoint: 'https://other.test/v1', model: 'o-1', browser_direct_verified: true };
+  cfg.wizard.providers_order = [...cfg.wizard.providers_order, 'other'];
   cfg.wizard.beginner_recommendation = 'anthropic';
   return cfg;
 }
 
 describe('registry', () => {
-  it('repository config: gemini (recommended) and anthropic are selectable; openai is a disabled card with its reason', () => {
+  it('repository config (browser build): gemini (recommended) and anthropic are selectable; openai is an "app only" card', () => {
     expect(selectableProviders(repo)).toEqual(['gemini', 'anthropic']);
     expect(providerCards(repo)).toEqual([
-      { id: 'gemini', selectable: true, reason: undefined, recommended: true, keyPrefix: 'AIza' },
-      { id: 'openai', selectable: false, reason: 'no_browser_access', recommended: false, keyPrefix: 'sk-' },
+      { id: 'gemini', selectable: true, reason: undefined, recommended: true, keyPrefix: 'AQ.' },
+      { id: 'openai', selectable: false, reason: 'app_only', recommended: false, keyPrefix: 'sk-' },
       { id: 'anthropic', selectable: true, reason: undefined, recommended: false, keyPrefix: 'sk-ant-' },
     ]);
     expect(providerConfig('openai', repo)).toBeNull();
@@ -31,7 +32,7 @@ describe('registry', () => {
 
   it('never returns an unverified provider, even when it is the beginner recommendation', () => {
     const cfg = fixture();
-    expect(selectableProviders(cfg)).toEqual([]); // openai verified but has no adapter
+    expect(selectableProviders(cfg)).toEqual([]); // "other" verified but has no adapter; openai needs the app
     const anth = providerCards(cfg).find((c) => c.id === 'anthropic')!;
     expect(anth).toMatchObject({ selectable: false, recommended: false, reason: 'pending_verification' });
     expect(providerModels('anthropic', cfg)).toEqual([]);
@@ -69,5 +70,33 @@ describe('registry', () => {
     expect(keyFormatOk('anthropic', 'sk-ant-', repo)).toBe(false);
     expect(keyFormatOk('anthropic', 'AIzaSy123', repo)).toBe(false);
     expect(keyFormatOk('anthropic', '', repo)).toBe(false);
+  });
+
+  it('gemini accepts the new AQ. keys and the older AIza keys', () => {
+    expect(keyFormatOk('gemini', 'AQ.Ab8RN6Kexample', repo)).toBe(true);
+    expect(keyFormatOk('gemini', ' AIzaSyExample ', repo)).toBe(true);
+    expect(keyFormatOk('gemini', 'AQ.', repo)).toBe(false);
+    expect(keyFormatOk('gemini', 'sk-ant-api03-abc', repo)).toBe(false);
+    const none = structuredClone(repo);
+    delete none.wizard.key_format_hints.gemini;
+    expect(keyFormatOk('gemini', 'anything', none)).toBe(true);
+    expect(keyFormatOk('gemini', '  ', none)).toBe(false);
+  });
+});
+
+describe('model labels', () => {
+  it('every configured model has a name and a description in both languages (dots become _)', async () => {
+    const { modelI18nId } = await import('../../../src/core/llm/registry');
+    const ko = JSON.parse(readFileSync('src/i18n/ko.json', 'utf8')) as { llm: Record<string, Record<string, string>> };
+    const en = JSON.parse(readFileSync('src/i18n/en.json', 'utf8')) as { llm: Record<string, Record<string, string>> };
+    expect(modelI18nId('gpt-6.1-terra')).toBe('gpt-6_1-terra');
+    for (const p of Object.values(repo.providers)) {
+      for (const m of p.models ?? []) {
+        for (const dict of [ko, en]) {
+          expect(dict.llm.model_name![modelI18nId(m)], m).toBeTruthy();
+          expect(dict.llm.model_desc![modelI18nId(m)], m).toBeTruthy();
+        }
+      }
+    }
   });
 });
